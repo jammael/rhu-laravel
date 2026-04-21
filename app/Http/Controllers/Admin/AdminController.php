@@ -18,7 +18,7 @@ class AdminController extends Controller
 
         // Patient Data
         $pregnantPatients = Patient::where('category', 'pregnant')->count();
-        $childPatients = Patient::where('category', 'child')->count();
+        $malnourishedCount = Patient::where('category', 'child')->count();
         $totalPatients = Patient::count();
 
         // Get latest 5 maternal records for urgent health alerts
@@ -30,7 +30,7 @@ class AdminController extends Controller
             'mediumRiskCount',
             'urgentAlerts',
             'pregnantPatients',
-            'childPatients',
+            'malnourishedCount',
             'totalPatients'
         ));
     }

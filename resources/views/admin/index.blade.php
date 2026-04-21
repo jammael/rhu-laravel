@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
 
-<div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 
     <!-- Card 1: Active Pregnancies (Clickable) -->
     <a href="{{ route('patients.index', ['filter' => 'pregnant']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
@@ -75,6 +75,25 @@
             <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Total Registered</p>
         </div>
         <div class="mt-4 flex items-center text-blue-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+        </div>
+    </a>
+
+    <!-- Card 5: Malnourished Children (Clickable) -->
+    <a href="{{ route('patients.index', ['filter' => 'child']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-100 to-blue-100 text-cyan-600 group-hover:from-cyan-200 group-hover:to-blue-200 transition-colors duration-300">
+                <span class="text-2xl">👶</span>
+            </div>
+            <svg class="w-5 h-5 text-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+        </div>
+        <div>
+            <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-cyan-600 transition-colors duration-300">{{ $malnourishedCount }}</h4>
+            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Malnourished Children</p>
+        </div>
+        <div class="mt-4 flex items-center text-cyan-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
         </div>
     </a>
