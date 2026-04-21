@@ -63,7 +63,7 @@
                             type="date"
                             id="birthdate"
                             name="birthdate"
-                            value="{{ old('birthdate', $patient->birthdate->format('Y-m-d')) }}"
+                            value="{{ old('birthdate', $patient->birthdate?->format('Y-m-d')) }}"
                             class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-slate-700
                                    focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
                                    transition-all duration-200 @error('birthdate') border-red-500 @enderror"

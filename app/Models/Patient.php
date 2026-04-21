@@ -13,4 +13,8 @@ class Patient extends Model
         'barangay',
         'contact_number',
     ];
+
+    protected $casts = [
+        'birthdate' => 'date',
+    ];
 }

@@ -51,7 +51,7 @@
                     <!-- Birthdate -->
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Date of Birth</label>
-                        <p class="text-lg text-slate-900">{{ $patient->birthdate->format('F d, Y') }}</p>
+                        <p class="text-lg text-slate-900">{{ $patient->birthdate?->format('F d, Y') ?? 'N/A' }}</p>
                     </div>
 
                     <!-- Barangay -->
