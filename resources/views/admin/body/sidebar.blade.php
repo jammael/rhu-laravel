@@ -43,7 +43,7 @@
           </li>
 
           <li>
-            <a href="#" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition">
+            <a href="{{ route('child-nutrition.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition">
               <span>👶</span>
               Child Nutrition
             </a>

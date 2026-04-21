@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\MaternalController;
+use App\Http\Controllers\Admin\ChildNutritionController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
 use App\Http\Controllers\PatientController;
@@ -34,6 +35,10 @@ Route::get('/admin/dashboard', [AdminController::class,
 // Maternal Care Routes
 Route::get('/maternal-care', [MaternalController::class, 'index'])->name('maternal.index');
 Route::post('/maternal-care/store', [MaternalController::class, 'store'])->name('maternal.store');
+
+// Child Nutrition Routes
+Route::get('/child-nutrition', [ChildNutritionController::class, 'index'])->name('child-nutrition.index');
+Route::post('/child-nutrition/store', [ChildNutritionController::class, 'store'])->name('child-nutrition.store');
 
 Route::resource('patients', PatientController::class);
 

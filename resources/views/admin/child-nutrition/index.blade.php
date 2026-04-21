@@ -1,0 +1,192 @@
+@extends('admin.admin_master')
+@section('admin')
+
+<!-- Success Message -->
+@if ($message = Session::get('success'))
+    <div class="mb-6 rounded-lg border border-green-300 bg-green-50 p-4 flex items-center gap-3">
+        <span class="text-2xl">✅</span>
+        <div>
+            <p class="font-semibold text-green-800">{{ $message }}</p>
+        </div>
+    </div>
+@endif
+
+<!-- Page Header -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800">Child Nutrition Management</h1>
+    <p class="text-slate-600 mt-2">Track and manage nutritional health records for children</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Left Column: Add New Record Form -->
+    <div class="lg:col-span-1">
+        <div class="rounded-xl bg-white p-6 shadow-sm border border-gray-100 sticky top-6">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">📝 New Growth Record</h2>
+
+            <form action="{{ route('child-nutrition.store') }}" method="POST" class="space-y-4">
+                @csrf
+
+                <!-- Full Name -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Full Name *</label>
+                    <input type="text" name="full_name" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"
+                           placeholder="Enter child's full name" value="{{ old('full_name') }}" required>
+                    @error('full_name')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Age (Months) -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Age (Months) *</label>
+                    <input type="number" name="age_months" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"
+                           placeholder="Enter age in months" value="{{ old('age_months') }}" min="0" max="180" required>
+                    @error('age_months')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Barangay -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Barangay *</label>
+                    <input type="text" name="barangay" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"
+                           placeholder="Enter barangay" value="{{ old('barangay') }}" required>
+                    @error('barangay')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Weight (kg) -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Weight (kg) *</label>
+                    <input type="number" name="weight_kg" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"
+                           placeholder="Enter weight in kg" value="{{ old('weight_kg') }}" step="0.1" min="0" max="100" required>
+                    @error('weight_kg')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Height (cm) -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Height (cm) *</label>
+                    <input type="number" name="height_cm" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"
+                           placeholder="Enter height in cm" value="{{ old('height_cm') }}" step="0.1" min="0" max="200" required>
+                    @error('height_cm')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Nutritional Status -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nutritional Status *</label>
+                    <select name="nutritional_status" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition" required>
+                        <option value="">Select status</option>
+                        <option value="normal" {{ old('nutritional_status') === 'normal' ? 'selected' : '' }}>🟢 Normal</option>
+                        <option value="underweight" {{ old('nutritional_status') === 'underweight' ? 'selected' : '' }}>🟡 Underweight</option>
+                        <option value="severely_underweight" {{ old('nutritional_status') === 'severely_underweight' ? 'selected' : '' }}>🔴 Severely Underweight</option>
+                    </select>
+                    @error('nutritional_status')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Last Weigh-in Date -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Last Weigh-in Date *</label>
+                    <input type="date" name="last_weigh_in_date" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"
+                           value="{{ old('last_weigh_in_date') }}" required>
+                    @error('last_weigh_in_date')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 px-4 rounded-lg transition">
+                    ➕ Add Record
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right Column: Records Table -->
+    <div class="lg:col-span-2">
+        <!-- Search & Filter Section -->
+        <div class="rounded-xl bg-white p-6 shadow-sm border border-gray-100 mb-6">
+            <form action="{{ route('child-nutrition.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Search by Name</label>
+                    <input type="text" name="search" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition"
+                           placeholder="Search..." value="{{ request('search') }}">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Filter by Status</label>
+                    <select name="nutritional_status" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition">
+                        <option value="">All Statuses</option>
+                        <option value="normal" {{ request('nutritional_status') === 'normal' ? 'selected' : '' }}>🟢 Normal</option>
+                        <option value="underweight" {{ request('nutritional_status') === 'underweight' ? 'selected' : '' }}>🟡 Underweight</option>
+                        <option value="severely_underweight" {{ request('nutritional_status') === 'severely_underweight' ? 'selected' : '' }}>🔴 Severely Underweight</option>
+                    </select>
+                </div>
+
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 px-4 rounded-lg transition">
+                        🔍 Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Records Table -->
+        <div class="rounded-xl bg-white shadow-sm border border-gray-100 overflow-hidden">
+            @if ($records->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Child Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Age (Months)</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Last Weigh-in</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Weight/Height</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach ($records as $record)
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $record->full_name }}</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">{{ $record->age_months }} months</td>
+                                    <td class="px-6 py-4 text-sm">
+                                        @if ($record->nutritional_status === 'normal')
+                                            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full bg-green-100 text-green-800">🟢 Normal</span>
+                                        @elseif ($record->nutritional_status === 'underweight')
+                                            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-800">🟡 Underweight</span>
+                                        @else
+                                            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800">🔴 Severely Underweight</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">{{ $record->last_weigh_in_date->format('M d, Y') }}</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600">{{ $record->weight_kg }} kg / {{ $record->height_cm }} cm</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-gray-200 bg-slate-50">
+                    {{ $records->links() }}
+                </div>
+            @else
+                <div class="p-8 text-center">
+                    <p class="text-slate-600 text-lg">📋 No child nutrition records found</p>
+                    <p class="text-slate-500 text-sm mt-2">Add your first record using the form on the left</p>
+                </div>
+            @endif
+        </div>
+    </div>
+
+</div>
+
+@endsection
