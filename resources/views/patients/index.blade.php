@@ -8,12 +8,82 @@
             <h2 class="text-2xl font-bold text-slate-900">Patient Records</h2>
             <p class="text-sm text-slate-500 mt-1">Sierra Bullones RHU - Manage patient information</p>
         </div>
-        <a href="{{ route('patients.create') }}" class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors duration-200">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Add Patient
-        </a>
+
+        <!-- Add Patient Dropdown Button -->
+        <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
+            <!-- Main Button -->
+            <button
+                @click="open = !open"
+                class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors duration-200"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Add Patient
+                <svg
+                    x-show="!open"
+                    class="w-4 h-4 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+                <svg
+                    x-show="open"
+                    class="w-4 h-4 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+                x-show="open"
+                @click.away="open = false"
+                x-transition
+                class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50"
+            >
+                <!-- Pregnant Women Option -->
+                <a
+                    href="{{ route('patients.create', ['type' => 'pregnant']) }}"
+                    class="flex items-start gap-3 px-4 py-3 hover:bg-emerald-50 transition-colors duration-150 border-b border-gray-100"
+                >
+                    <div class="flex-shrink-0 mt-1">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100">
+                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h-2m0 0H10m2 0v2m0-2v-2m7 2a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-slate-900">Pregnant Woman</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Enroll maternal care patient</p>
+                    </div>
+                </a>
+
+                <!-- Malnourished Child Option -->
+                <a
+                    href="{{ route('patients.create', ['type' => 'malnourished']) }}"
+                    class="flex items-start gap-3 px-4 py-3 hover:bg-blue-50 transition-colors duration-150"
+                >
+                    <div class="flex-shrink-0 mt-1">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-slate-900">Malnourished Child</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Enroll nutrition support patient</p>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Search & Filter Section -->

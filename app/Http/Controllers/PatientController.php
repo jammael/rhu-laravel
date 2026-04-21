@@ -42,9 +42,15 @@ class PatientController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-    return view('patients.create');
+        // Validate that the type parameter is valid
+        $type = $request->query('type', 'pregnant');
+        if (!in_array($type, ['pregnant', 'malnourished'])) {
+            $type = 'pregnant';
+        }
+
+        return view('patients.create', ['type' => $type]);
     }
 
 
@@ -53,19 +59,19 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
-    // 1. Validate the data (Important for clean data!)
-    $validated = $request->validate([
-        'name'           => 'required|string|max:255',
-        'category'       => 'required|in:pregnant,child',
-        'barangay'       => 'required|string',
-        'contact_number' => 'required|string',
-    ]);
+        // 1. Validate the data (Important for clean data!)
+        $validated = $request->validate([
+            'name'           => 'required|string|max:255',
+            'category'       => 'required|in:pregnant,child',
+            'barangay'       => 'required|string',
+            'contact_number' => 'required|string',
+        ]);
 
-    // 2. Create the patient in the database
-    Patient::create($validated);
+        // 2. Create the patient in the database
+        Patient::create($validated);
 
-    // 3. Redirect back with a success message
-    return redirect()->route('patients.index')->with('success', 'New patient added successfully!');
+        // 3. Redirect back with a success message
+        return redirect()->route('patients.index')->with('success', 'New patient added successfully!');
     }
 
 
