@@ -181,8 +181,8 @@
                                 <div class="flex items-center justify-center gap-3">
                                     <!-- View Button -->
                                     <a
-                                        href="#"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition-colors duration-200"
+                                        href="{{ route('patients.show', $patient->id) }}"
+                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition-all duration-200 hover:scale-110"
                                         title="View"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,8 +193,8 @@
 
                                     <!-- Edit Button -->
                                     <a
-                                        href="#"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors duration-200"
+                                        href="{{ route('patients.edit', $patient->id) }}"
+                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 hover:scale-110"
                                         title="Edit"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,16 +203,24 @@
                                     </a>
 
                                     <!-- Delete Button -->
-                                    <button
-                                        type="button"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors duration-200"
-                                        title="Delete"
-                                        onclick="if(confirm('Are you sure?')) { /* Add delete logic here */ }"
+                                    <form
+                                        action="{{ route('patients.destroy', $patient->id) }}"
+                                        method="POST"
+                                        style="display: inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this patient? This action cannot be undone.');"
                                     >
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            type="submit"
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 hover:scale-110"
+                                            title="Delete"
+                                        >
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

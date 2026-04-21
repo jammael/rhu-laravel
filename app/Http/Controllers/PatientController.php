@@ -81,7 +81,8 @@ class PatientController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $patient = Patient::findOrFail($id);
+        return view('patients.show', compact('patient'));
     }
 
     /**
@@ -89,7 +90,8 @@ class PatientController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $patient = Patient::findOrFail($id);
+        return view('patients.edit', compact('patient'));
     }
 
     /**
@@ -97,7 +99,19 @@ class PatientController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $patient = Patient::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'           => 'required|string|max:255',
+            'birthdate'      => 'required|date',
+            'category'       => 'required|in:pregnant,child',
+            'barangay'       => 'required|string',
+            'contact_number' => 'required|string',
+        ]);
+
+        $patient->update($validated);
+
+        return redirect()->route('patients.show', $patient->id)->with('success', 'Patient updated successfully!');
     }
 
     /**
@@ -105,6 +119,9 @@ class PatientController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $patient = Patient::findOrFail($id);
+        $patient->delete();
+
+        return redirect()->route('patients.index')->with('success', 'Patient deleted successfully!');
     }
 }
