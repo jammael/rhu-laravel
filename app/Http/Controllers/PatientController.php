@@ -62,6 +62,7 @@ class PatientController extends Controller
         // 1. Validate the data (Important for clean data!)
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
+            'birthdate'      => 'required|date',
             'category'       => 'required|in:pregnant,child',
             'barangay'       => 'required|string',
             'contact_number' => 'required|string',

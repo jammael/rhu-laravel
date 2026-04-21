@@ -61,6 +61,25 @@
                         @enderror
                     </div>
 
+                    <!-- Birthdate Input -->
+                    <div>
+                        <label for="birthdate" class="block text-sm font-semibold text-slate-700 mb-2">
+                            Date of Birth <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            id="birthdate"
+                            name="birthdate"
+                            value="{{ old('birthdate') }}"
+                            class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-slate-700
+                                   focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                                   transition-all duration-200 @error('birthdate') border-red-500 @enderror"
+                            required>
+                        @error('birthdate')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Hidden Category Input -->
                     <input
                         type="hidden"
