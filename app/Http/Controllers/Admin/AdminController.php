@@ -14,8 +14,9 @@ class AdminController extends Controller
     {
         // Maternal Data
         $totalPregnancies = MaternalRecord::count();
-        $highRiskCount = MaternalRecord::where('risk_level', 'high')->count();
+        $lowRiskCount = MaternalRecord::where('risk_level', 'low')->count();
         $mediumRiskCount = MaternalRecord::where('risk_level', 'medium')->count();
+        $highRiskCount = MaternalRecord::where('risk_level', 'high')->count();
 
         // Child Nutrition Data
         $totalChildren = ChildNutritionRecord::count();
@@ -33,8 +34,9 @@ class AdminController extends Controller
 
         return view('admin.index', compact(
             'totalPregnancies',
-            'highRiskCount',
+            'lowRiskCount',
             'mediumRiskCount',
+            'highRiskCount',
             'totalChildren',
             'normalNutritionCount',
             'underweightCount',
