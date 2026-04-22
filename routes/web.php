@@ -39,6 +39,7 @@ Route::post('/maternal-care/store', [MaternalController::class, 'store'])->name(
 // Child Nutrition Routes
 Route::get('/child-nutrition', [ChildNutritionController::class, 'index'])->name('child-nutrition.index');
 Route::post('/child-nutrition/store', [ChildNutritionController::class, 'store'])->name('child-nutrition.store');
+Route::get('/child-nutrition/{id}/report', [ChildNutritionController::class, 'generateChildHealthReport'])->name('child-nutrition.report');
 
 Route::resource('patients', PatientController::class);
 

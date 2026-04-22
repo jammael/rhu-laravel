@@ -100,6 +100,90 @@
 
 </div>
 
+<!-- Child Nutrition Live Stats Section -->
+<div class="mt-6">
+    <h2 class="text-2xl font-bold text-slate-800 mb-4">📊 Child Nutrition Live Stats</h2>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+
+        <!-- Card 1: Total Children Registered -->
+        <a href="{{ route('child-nutrition.index') }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-200 transition-colors duration-300">
+                    <span class="text-2xl">👶</span>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-blue-600 transition-colors duration-300">{{ $totalChildren }}</h4>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Total Children</p>
+            </div>
+            <div class="mt-4 flex items-center text-blue-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View All <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </div>
+        </a>
+
+        <!-- Card 2: Normal Nutrition Status -->
+        <a href="{{ route('child-nutrition.index', ['nutritional_status' => 'normal']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 text-green-600 group-hover:bg-green-200 transition-colors duration-300">
+                    <span class="text-2xl">✓</span>
+                </div>
+                <svg class="w-5 h-5 text-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-green-600 transition-colors duration-300">{{ $normalNutritionCount }}</h4>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Normal Status</p>
+            </div>
+            <div class="mt-4 flex items-center text-green-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </div>
+        </a>
+
+        <!-- Card 3: Underweight Children -->
+        <a href="{{ route('child-nutrition.index', ['nutritional_status' => 'underweight']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100 text-yellow-600 group-hover:bg-yellow-200 transition-colors duration-300">
+                    <span class="text-2xl">⚠</span>
+                </div>
+                <svg class="w-5 h-5 text-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-yellow-600 transition-colors duration-300">{{ $underweightCount }}</h4>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Underweight</p>
+            </div>
+            <div class="mt-4 flex items-center text-yellow-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </div>
+        </a>
+
+        <!-- Card 4: Severely Underweight Children -->
+        <a href="{{ route('child-nutrition.index', ['nutritional_status' => 'severely_underweight']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 text-red-600 group-hover:bg-red-200 transition-colors duration-300">
+                    <span class="text-2xl">🔴</span>
+                </div>
+                <svg class="w-5 h-5 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-red-600 transition-colors duration-300">{{ $severelyUnderweightCount }}</h4>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Severely Underweight</p>
+            </div>
+            <div class="mt-4 flex items-center text-red-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </div>
+        </a>
+
+    </div>
+</div>
+
 <!-- Advanced Monitoring Section -->
 <div class="mt-8">
 

@@ -77,18 +77,12 @@
                     @enderror
                 </div>
 
-                <!-- Nutritional Status -->
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Nutritional Status *</label>
-                    <select name="nutritional_status" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition" required>
-                        <option value="">Select status</option>
-                        <option value="normal" {{ old('nutritional_status') === 'normal' ? 'selected' : '' }}>🟢 Normal</option>
-                        <option value="underweight" {{ old('nutritional_status') === 'underweight' ? 'selected' : '' }}>🟡 Underweight</option>
-                        <option value="severely_underweight" {{ old('nutritional_status') === 'severely_underweight' ? 'selected' : '' }}>🔴 Severely Underweight</option>
-                    </select>
-                    @error('nutritional_status')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                    @enderror
+                <!-- Nutritional Status: Auto-calculated -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p class="text-xs text-blue-800">
+                        <span class="font-semibold">ℹ️ Nutritional Status</span><br>
+                        Status is automatically calculated based on weight, height, and age using WHO/DOH standards.
+                    </p>
                 </div>
 
                 <!-- Last Weigh-in Date -->
@@ -150,6 +144,7 @@
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Last Weigh-in</th>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Weight/Height</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -158,16 +153,15 @@
                                     <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $record->full_name }}</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->age_months }} months</td>
                                     <td class="px-6 py-4 text-sm">
-                                        @if ($record->nutritional_status === 'normal')
-                                            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full bg-green-100 text-green-800">🟢 Normal</span>
-                                        @elseif ($record->nutritional_status === 'underweight')
-                                            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full bg-yellow-100 text-yellow-800">🟡 Underweight</span>
-                                        @else
-                                            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800">🔴 Severely Underweight</span>
-                                        @endif
+                                        <x-nutrition-status-badge :status="$record->nutritional_status" />
                                     </td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->last_weigh_in_date->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->weight_kg }} kg / {{ $record->height_cm }} cm</td>
+                                    <td class="px-6 py-4 text-sm">
+                                        <a href="{{ route('child-nutrition.report', $record->id) }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-3 rounded transition text-xs">
+                                            📄 PDF Report
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

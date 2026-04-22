@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MaternalRecord;
+use App\Models\ChildNutritionRecord;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,12 @@ class AdminController extends Controller
         $totalPregnancies = MaternalRecord::count();
         $highRiskCount = MaternalRecord::where('risk_level', 'high')->count();
         $mediumRiskCount = MaternalRecord::where('risk_level', 'medium')->count();
+
+        // Child Nutrition Data
+        $totalChildren = ChildNutritionRecord::count();
+        $normalNutritionCount = ChildNutritionRecord::where('nutritional_status', 'normal')->count();
+        $underweightCount = ChildNutritionRecord::where('nutritional_status', 'underweight')->count();
+        $severelyUnderweightCount = ChildNutritionRecord::where('nutritional_status', 'severely_underweight')->count();
 
         // Patient Data
         $pregnantPatients = Patient::where('category', 'pregnant')->count();
@@ -28,6 +35,10 @@ class AdminController extends Controller
             'totalPregnancies',
             'highRiskCount',
             'mediumRiskCount',
+            'totalChildren',
+            'normalNutritionCount',
+            'underweightCount',
+            'severelyUnderweightCount',
             'urgentAlerts',
             'pregnantPatients',
             'malnourishedCount',

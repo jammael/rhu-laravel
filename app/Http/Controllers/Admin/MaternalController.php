@@ -27,12 +27,15 @@ class MaternalController extends Controller
 
         // Dashboard filter (from cards)
         if ($request->filled('filter')) {
-            match ($request->filter) {
-                'high_risk' => $query->where('risk_level', 'high'),
-                'medium_risk' => $query->where('risk_level', 'medium'),
-                'low_risk' => $query->where('risk_level', 'low'),
-                default => $query,
-            };
+            $riskLevelMap = [
+                'high_risk' => 'high',
+                'medium_risk' => 'medium',
+                'low_risk' => 'low',
+            ];
+
+            if (isset($riskLevelMap[$request->filter])) {
+                $query->where('risk_level', $riskLevelMap[$request->filter]);
+            }
         }
 
         // Get paginated results (15 per page)
