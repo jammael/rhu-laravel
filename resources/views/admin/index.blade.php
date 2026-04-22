@@ -1,125 +1,103 @@
 @extends('admin.admin_master')
 @section('admin')
 
-<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+<!-- ========== MATERNAL STATISTICS ROW ========== -->
+<div class="mb-8">
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-slate-800 flex items-center gap-2">
+            <span>🤰</span> Maternal Health Overview
+        </h2>
+        <p class="text-sm text-slate-500 mt-1">Track pregnancies and risk categories</p>
+    </div>
 
-    <!-- Card 1: Active Pregnancies (Clickable) -->
-    <a href="{{ route('patients.index', ['filter' => 'pregnant']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 group-hover:bg-emerald-200 transition-colors duration-300">
-                <span class="text-2xl">🤰</span>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+        <!-- Card 1: Total Pregnancies -->
+        <a href="{{ route('maternal.index') }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 group-hover:bg-emerald-200 transition-colors duration-300">
+                    <span class="text-2xl">👪</span>
+                </div>
+                <svg class="w-5 h-5 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
             </div>
-            <svg class="w-5 h-5 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-        </div>
-        <div>
-            <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-emerald-600 transition-colors duration-300">{{ $pregnantPatients }}</h4>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Active Pregnancies</p>
-        </div>
-        <div class="mt-4 flex items-center text-emerald-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-        </div>
-    </a>
-
-    <!-- Card 2: High Risk Cases (Clickable) -->
-    <a href="{{ route('maternal.index', ['filter' => 'high_risk']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 text-red-600 group-hover:bg-red-200 transition-colors duration-300">
-                <span class="text-2xl">⚠️</span>
+            <div>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-emerald-600 transition-colors duration-300">{{ $totalPregnancies }}</h4>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Total Pregnancies</p>
             </div>
-            <svg class="w-5 h-5 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-        </div>
-        <div>
-            <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-red-600 transition-colors duration-300">{{ $highRiskCount }}</h4>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">High Risk Cases</p>
-        </div>
-        <div class="mt-4 flex items-center text-red-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-        </div>
-    </a>
-
-    <!-- Card 3: Medium Risk Cases (Clickable) -->
-    <a href="{{ route('maternal.index', ['filter' => 'medium_risk']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100 text-yellow-600 group-hover:bg-yellow-200 transition-colors duration-300">
-                <span class="text-2xl">📋</span>
+            <div class="mt-4 flex items-center text-emerald-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View All <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
             </div>
-            <svg class="w-5 h-5 text-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-        </div>
-        <div>
-            <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-yellow-600 transition-colors duration-300">{{ $mediumRiskCount }}</h4>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Medium Risk Cases</p>
-        </div>
-        <div class="mt-4 flex items-center text-yellow-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-        </div>
-    </a>
+        </a>
 
-    <!-- Card 4: Total Registered (Clickable) -->
-    <a href="{{ route('patients.index', ['filter' => 'all']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-200 transition-colors duration-300">
-                <span class="text-2xl">👥</span>
+        <!-- Card 2: High Risk Cases -->
+        <a href="{{ route('maternal.index', ['filter' => 'high_risk']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-red-100 text-red-600 group-hover:bg-red-200 transition-colors duration-300">
+                    <span class="text-2xl">⚠️</span>
+                </div>
+                <svg class="w-5 h-5 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
             </div>
-            <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-        </div>
-        <div>
-            <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-blue-600 transition-colors duration-300">{{ $totalPatients }}</h4>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Total Registered</p>
-        </div>
-        <div class="mt-4 flex items-center text-blue-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-        </div>
-    </a>
-
-    <!-- Card 5: Malnourished Children (Clickable) -->
-    <a href="{{ route('patients.index', ['filter' => 'child']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-100 to-blue-100 text-cyan-600 group-hover:from-cyan-200 group-hover:to-blue-200 transition-colors duration-300">
-                <span class="text-2xl">👶</span>
+            <div>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-red-600 transition-colors duration-300">{{ $highRiskCount }}</h4>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">High Risk Cases</p>
             </div>
-            <svg class="w-5 h-5 text-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-        </div>
-        <div>
-            <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-cyan-600 transition-colors duration-300">{{ $malnourishedCount }}</h4>
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Malnourished Children</p>
-        </div>
-        <div class="mt-4 flex items-center text-cyan-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-        </div>
-    </a>
+            <div class="mt-4 flex items-center text-red-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </div>
+        </a>
 
+        <!-- Card 3: Medium Risk Cases -->
+        <a href="{{ route('maternal.index', ['filter' => 'medium_risk']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100 text-yellow-600 group-hover:bg-yellow-200 transition-colors duration-300">
+                    <span class="text-2xl">📋</span>
+                </div>
+                <svg class="w-5 h-5 text-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-yellow-600 transition-colors duration-300">{{ $mediumRiskCount }}</h4>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Medium Risk Cases</p>
+            </div>
+            <div class="mt-4 flex items-center text-yellow-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View Details <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </div>
+        </a>
+
+    </div>
 </div>
 
-<!-- Child Nutrition Live Stats Section -->
-<div class="mt-6">
-    <h2 class="text-2xl font-bold text-slate-800 mb-4">📊 Child Nutrition Live Stats</h2>
+<!-- ========== CHILD NUTRITION STATISTICS ROW ========== -->
+<div class="mb-8">
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-slate-800 flex items-center gap-2">
+            <span>👶</span> Child Nutrition Overview
+        </h2>
+        <p class="text-sm text-slate-500 mt-1">Monitor nutritional status across children</p>
+    </div>
+
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
 
         <!-- Card 1: Total Children Registered -->
         <a href="{{ route('child-nutrition.index') }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600 group-hover:bg-blue-200 transition-colors duration-300">
-                    <span class="text-2xl">👶</span>
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 group-hover:bg-indigo-200 transition-colors duration-300">
+                    <span class="text-2xl">📊</span>
                 </div>
-                <svg class="w-5 h-5 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                 </svg>
             </div>
             <div>
-                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-blue-600 transition-colors duration-300">{{ $totalChildren }}</h4>
+                <h4 class="text-3xl font-extrabold text-slate-800 group-hover:text-indigo-600 transition-colors duration-300">{{ $totalChildren }}</h4>
                 <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide group-hover:text-slate-600 transition-colors duration-300">Total Children</p>
             </div>
-            <div class="mt-4 flex items-center text-blue-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div class="mt-4 flex items-center text-indigo-600 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 View All <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
             </div>
         </a>
@@ -128,7 +106,7 @@
         <a href="{{ route('child-nutrition.index', ['nutritional_status' => 'normal']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 text-green-600 group-hover:bg-green-200 transition-colors duration-300">
-                    <span class="text-2xl">✓</span>
+                    <span class="text-2xl">✅</span>
                 </div>
                 <svg class="w-5 h-5 text-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -147,7 +125,7 @@
         <a href="{{ route('child-nutrition.index', ['nutritional_status' => 'underweight']) }}" class="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100 text-yellow-600 group-hover:bg-yellow-200 transition-colors duration-300">
-                    <span class="text-2xl">⚠</span>
+                    <span class="text-2xl">⚠️</span>
                 </div>
                 <svg class="w-5 h-5 text-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -184,14 +162,14 @@
     </div>
 </div>
 
-<!-- Advanced Monitoring Section -->
-<div class="mt-8">
-
-    <!-- Right Column: Priority Patient Alerts -->
+<!-- ========== URGENT HEALTH ALERTS SECTION ========== -->
+<div class="mt-10">
     <div class="rounded-xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
         <div class="mb-6">
-            <h3 class="text-lg font-bold text-slate-800">Urgent Health Alerts</h3>
-            <p class="text-sm text-slate-500">5 Most Recent Critical Cases</p>
+            <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <span>🚨</span> Urgent Health Alerts
+            </h3>
+            <p class="text-sm text-slate-500 mt-1">5 Most Recent Critical & Warning Cases</p>
         </div>
 
         <!-- Alert List -->
@@ -210,9 +188,6 @@
                     <span class="inline-flex items-center justify-center px-3 py-1 rounded text-white text-xs font-bold
 {{ $alert->risk_level === 'high' ? 'bg-red-600' : 'bg-yellow-500' }}">
 {{ $alert->risk_level === 'high' ? 'CRITICAL' : 'WARNING' }}
-</span>
-
-                        {{ $alert->risk_level === 'high' ? 'CRITICAL' : 'WARNING' }}
                     </span>
                 </div>
             @empty
