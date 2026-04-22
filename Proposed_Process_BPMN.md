@@ -30,381 +30,457 @@ The proposed automation framework includes:
 
 ---
 
-### 4.3 Proposed BPMN Diagrams
+### 4.3 Comprehensive Proposed BPMN Diagram
 
-#### 4.3.1 Maternal Record Creation - Automated Workflow
+#### 4.3.1 RHU-Laravel Automated System - Master Process Flow
 
-**Process Name:** Maternal Record Registration with Validation & Notification
+**Process Name:** Complete RHU-Laravel System Automation Workflow
 
 ```
-[Start] 
-   ↓
-[Submit Maternal Record Form]
-   ↓
-[Validate Input Data]
-   ├─ Valid? → [Store in Database]
-   │            ↓
-   │           [Queue Email Job]
-   │            ↓
-   │           [Send Confirmation Email]
-   │            ↓
-   │           [Trigger Alert (if High Risk)]
-   │            ├─ High Risk? → [Queue Slack Notification]
-   │            │               ↓
-   │            │              [Send Admin Alert]
-   │            └─ Low/Medium Risk? → [Complete]
-   │                                     ↓
-   └─ Invalid? → [Return Error Message]
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                  RHU-LARAVEL AUTOMATED PROCESS FLOW                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+                                    ┌──────────────────────────┐
+                                    │  USER AUTHENTICATION     │
+                                    │  & ROLE MANAGEMENT       │
+                                    └──────────────────────────┘
+                                              │
+                    ┌─────────────────────────┼─────────────────────────┐
+                    ↓                         ↓                         ↓
+            ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+            │ ADMIN LOGIN  │         │ USER LOGIN   │         │ VERIFY CREDS │
+            └──────────────┘         └──────────────┘         └──────────────┘
+                    │                         │                         │
+                    └─────────────────────────┼─────────────────────────┘
+                                              │
+                                    ◇ [Valid Credentials?]
+                                   / \
+                              Yes /   \ No
+                                /       \
+                    ┌──────────────┐   │ Log Failed Attempt │
+                    │ Create Token │   │ Lock if > 5 attempts│
+                    │ Session      │   │ Return to Login     │
+                    └──────────────┘   └────────────────────┘
+                            │
+                    ◇ [User Role?]
+                   / \
+              Admin/  \User
+              /         \
+            ↓           ↓
+    ┌─────────────┐  ┌─────────────┐
+    │ADMIN DASH   │  │ USER DASH   │
+    │BOARD        │  │BOARD        │
+    └─────────────┘  └─────────────┘
+            │              │
+            └──────┬───────┘
                    ↓
-                 [Display Validation Errors]
-                   ↓
-                 [End - Retry]
-```
+    ┌──────────────────────────────────────────────────────────────────────┐
+    │        SYSTEM EVENT TRIGGERS & BACKGROUND PROCESSES                 │
+    └──────────────────────────────────────────────────────────────────────┘
+            │                           │                          │
+            ↓                           ↓                          ↓
+    ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+    │   DATA INPUT     │    │  SCHEDULED JOBS  │    │  USER REQUESTS   │
+    │   EVENTS         │    │  (Daily/Monthly) │    │  (On-Demand)     │
+    └──────────────────┘    └──────────────────┘    └──────────────────┘
 
-**Automated Components:**
-- Input validation at controller level
-- Database transaction for atomic save
-- Async email job queue
-- Conditional Slack notifications based on risk level
-- Error handling with user feedback
 
-**Technology Stack for Automation:**
-```php
-// Queue Configuration
-QUEUE_CONNECTION=database
-// or REDIS_HOST for production
+┌─── STREAM 1: MATERNAL RECORD MANAGEMENT ─────────────────────────────────────────────────────────┐
+│                                                                                                     │
+│  ┌─────────────────────────────────────────────────────────────────────────────────────────────┐  │
+│  │ MATERNAL RECORD SUBMISSION WORKFLOW                                                         │  │
+│  ├─────────────────────────────────────────────────────────────────────────────────────────────┤  │
+│  │                                                                                               │  │
+│  │  [User Submits Form] → [Validate Data] ◇                                                   │  │
+│  │                                        │                                                    │  │
+│  │                                    Valid?                                                  │  │
+│  │                                   /      \                                                 │  │
+│  │                                 Yes       No                                               │  │
+│  │                                 /          \                                               │  │
+│  │                    ┌──────────────┐    [Return Error]                                      │  │
+│  │                    ↓              │         │                                              │  │
+│  │             [Store Record]        │    [Display Validation Errors]                         │  │
+│  │             [Generate ID]         │         │                                              │  │
+│  │                    │              │    ┌────┘                                              │  │
+│  │                    ↓              │    │                                                   │  │
+│  │      [Event: MaternalRecordCreated]   │                                                   │  │
+│  │                    │              │    │                                                   │  │
+│  │                    ↓              │    │                                                   │  │
+│  │       ◇ [Risk Level Check]        │    │                                                  │  │
+│  │      / | \                        │    │                                                  │  │
+│  │  Low/ Med\ High                   │    │                                                  │  │
+│  │   /   |    \                      │    │                                                  │  │
+│  │  ↓    ↓     ↓                     │    │                                                  │  │
+│  │ Normal Standard Urgent            │    │                                                  │  │
+│  │ Alert Alert Alert                 │    │                                                  │  │
+│  │  │    │     │                     │    │                                                  │  │
+│  │  └────┼─────┘                     │    │                                                  │  │
+│  │       ↓                           │    │                                                  │  │
+│  │  [Queue Confirmation Email]       │    │                                                  │  │
+│  │  [Queue Slack Notification]       │    │                                                  │  │
+│  │  [Update Dashboard Metrics]       │    │                                                  │  │
+│  │       │                           │    │                                                  │  │
+│  │       └──────────────┬────────────┴────┘                                                  │  │
+│  │                      ↓                                                                      │  │
+│  │              [Response to User]                                                            │  │
+│  │                      │                                                                      │  │
+│  └──────────────────────┼───────────────────────────────────────────────────────────────────┘  │
+│                         │                                                                        │
+└─────────────────────────┼────────────────────────────────────────────────────────────────────────┘
+                          │
+                          ↓
 
-// Mail Configuration  
-MAIL_FROM_ADDRESS
-MAIL_FROM_NAME
-POSTMARK_API_KEY (or RESEND_API_KEY)
+┌─── STREAM 2: MATERNAL HEALTH MONITORING (SCHEDULED JOB) ──────────────────────────────────────────┐
+│                                                                                                     │
+│  [Daily Scheduled Task - 8:00 AM]                                                               │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Fetch All Maternal Records]                                                                  │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [For Each Record - Analyze]                                                                   │
+│         │                                                                                        │
+│         ├─ ◇ [Days Since Checkup > 30?]                                                        │
+│         │    ├─ Yes: [Mark Overdue]                                                            │
+│         │    │        [Generate Alert]                                                         │
+│         │    │        [Queue Email to Provider]                                                │
+│         │    │        [Slack Notification to Admin]                                            │
+│         │    └─ No: [Continue]                                                                │
+│         │                                                                                        │
+│         ├─ ◇ [Pregnancy Stage Transition?]                                                     │
+│         │    ├─ To 3rd Trimester: [Generate Trimester Report]                                 │
+│         │    │                     [Queue Report Email]                                        │
+│         │    └─ Other: [Continue]                                                             │
+│         │                                                                                        │
+│         ├─ ◇ [Risk Level Changed?]                                                             │
+│         │    ├─ Escalated: [Immediate Alert]                                                  │
+│         │    │              [Notify Healthcare Team]                                           │
+│         │    └─ Improved: [Log Progress]                                                      │
+│         │                                                                                        │
+│         └─ [Update Record Cache]                                                              │
+│                                                                                                 │
+│  [Aggregate Maternal Statistics]                                                               │
+│         │                                                                                        │
+│         ├─ Total Active Records                                                               │
+│         ├─ High-Risk Count                                                                    │
+│         ├─ Overdue Checkups                                                                   │
+│         ├─ By Risk Level Distribution                                                         │
+│         └─ By Barangay Breakdown                                                              │
+│                                                                                                 │
+│  [Cache Statistics for Dashboard] → [Generate Summary Report]                                 │
+│                                      [Email to Admin]                                          │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ↓
+
+┌─── STREAM 3: CHILD NUTRITION MONITORING (SCHEDULED JOB) ──────────────────────────────────────────┐
+│                                                                                                     │
+│  [Monthly Scheduled Task - 1st Day of Month]                                                    │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Fetch All Child Nutrition Records]                                                          │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [For Each Child Record - Analyze]                                                            │
+│         │                                                                                        │
+│         ├─ [Calculate BMI Based on Age/Weight/Height]                                         │
+│         │   │                                                                                   │
+│         │   ├─ ◇ [Malnourished? (BMI < -2 SD)]                                               │
+│         │   │    ├─ Yes: [Flag Malnourished Status]                                           │
+│         │   │    │       [Generate HIGH Alert]                                                │
+│         │   │    │       [Create Dashboard Card]                                              │
+│         │   │    │       [Queue Notification Email]                                           │
+│         │   │    │       [Notify Healthcare Provider Immediately]                             │
+│         │   │    │       [Log Alert Event]                                                    │
+│         │   │    │       [Slack Alert to Admin]                                               │
+│         │   │    └─ No: ◇ [At Risk? (BMI -1 to -2 SD)]                                       │
+│         │   │             ├─ Yes: [Flag At-Risk Status]                                       │
+│         │   │             │       [Queue Reminder Email]                                      │
+│         │   │             │       [Update Monitoring List]                                    │
+│         │   │             └─ No: [Normal Status - No Action]                                  │
+│         │   │                                                                                   │
+│         │   ├─ [Check Weight Gain Trend (Last 3 Records)]                                    │
+│         │   │   ├─ ◇ [Declining Trend?]                                                      │
+│         │   │   │  ├─ Yes: [Alert Healthcare Provider]                                       │
+│         │   │   │  │       [Schedule Follow-up]                                              │
+│         │   │   │  └─ No: [Log Progress/Improvement]                                         │
+│         │   │                                                                                   │
+│         │   └─ [Calculate Nutrition Score]                                                    │
+│         │                                                                                       │
+│         ├─ [Aggregate Child Nutrition Statistics]                                            │
+│         │  ├─ Total Malnourished Children                                                     │
+│         │  ├─ Total At-Risk Children                                                          │
+│         │  ├─ Total Normal Status                                                             │
+│         │  ├─ Improvement Rate %                                                              │
+│         │  ├─ By Barangay Distribution                                                        │
+│         │  └─ By Age Group Distribution                                                       │
+│         │                                                                                       │
+│         ├─ [Cache Dashboard Metrics]                                                          │
+│         │                                                                                       │
+│         └─ [Send Summary Report to Admin] → [Email with Statistics]                          │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ↓
+
+┌─── STREAM 4: ON-DEMAND REPORT GENERATION ────────────────────────────────────────────────────────┐
+│                                                                                                     │
+│  [User Requests Report from Dashboard]                                                         │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Select Report Type & Parameters]                                                            │
+│         │                                                                                        │
+│         ├─ Maternal Health Report                                                             │
+│         ├─ Child Nutrition Report                                                             │
+│         ├─ Risk Assessment Summary                                                            │
+│         ├─ Barangay Statistics Report                                                         │
+│         └─ Custom Date Range Report                                                           │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Validate Report Parameters] ◇                                                               │
+│         │                                                                                        │
+│         ├─ Valid? ────────────────────────────────────────────────────────────────────┐       │
+│         │   │                                                                         │       │
+│         │   ↓                                                                         │       │
+│         │   [Queue PDF Generation Job]                                              │       │
+│         │   [Return Task ID to User]                                                │       │
+│         │   [Display: "Report Being Generated..."]                                  │       │
+│         │        │                                                                   │       │
+│         │        ↓ (Async Processing)                                               │       │
+│         │   [Fetch Required Data]                                                   │       │
+│         │   [Apply Filters & Sorting]                                               │       │
+│         │   [Format Data for PDF]                                                   │       │
+│         │   [Generate PDF File (DomPDF)]                                            │       │
+│         │   [Store in Storage Directory]                                            │       │
+│         │   [Create Download Link]                                                  │       │
+│         │        │                                                                   │       │
+│         │        ↓                                                                   │       │
+│         │   [Queue Report Ready Email]                                             │       │
+│         │   [Send Link to User Email]                                              │       │
+│         │        │                                                                   │       │
+│         │        ↓                                                                   │       │
+│         │   [Update Job Status: Complete]                                          │       │
+│         │   [Notify User (Page Refresh)]                                           │       │
+│         │        │                                                                   │       │
+│         │        ↓                                                                   │       │
+│         │   [User Downloads PDF]                                                   │       │
+│         │                                                                            │       │
+│         └─ Invalid? ──────────────────────────────────────────────────────────────┘       │
+│             │                                                                              │
+│             ↓                                                                              │
+│             [Return Error Message]                                                        │
+│             [Display Validation Errors]                                                   │
+│             [Return to Report Form]                                                       │
+│                                                                                             │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ↓
+
+┌─── STREAM 5: EMAIL NOTIFICATION SYSTEM (QUEUE) ──────────────────────────────────────────────────┐
+│                                                                                                     │
+│  [Multiple Event Triggers Throughout System]                                                    │
+│         │                                                                                        │
+│         ├─ Maternal Record Created → [Email: Confirmation]                                     │
+│         ├─ High-Risk Alert Triggered → [Email: Urgent Alert]                                  │
+│         ├─ Overdue Checkup Detected → [Email: Follow-up Reminder]                             │
+│         ├─ Child Malnourished Alert → [Email: Urgent Intervention Notice]                     │
+│         ├─ Report Generated → [Email: Download Link]                                          │
+│         ├─ User Password Reset → [Email: Reset Link]                                          │
+│         ├─ Account Locked → [Email: Security Alert]                                           │
+│         └─ Daily Summary Report → [Email: Statistics]                                         │
+│                                                                                                 │
+│         ↓ (All converge to Email Queue)                                                       │
+│                                                                                                 │
+│  [Event Listener Triggered]                                                                   │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Queue Email Job]                                                                             │
+│         ├─ Set Priority: High/Normal/Low                                                      │
+│         ├─ Using Queue: Database/Redis                                                        │
+│         └─ Set Retry: 3 attempts with exponential backoff                                     │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Queue Worker Processes]                                                                     │
+│         │                                                                                        │
+│         ├─ ◇ [Job Failed?]                                                                    │
+│         │    ├─ Retry < 3: [Retry with 60s/120s/240s delay]                                 │
+│         │    └─ Retry = 3: [Move to Failed Queue]                                            │
+│         │                 [Log Failure]                                                       │
+│         │                 [Alert Admin]                                                       │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Format Email Template]                                                                      │
+│         ├─ Load Blade Template                                                                │
+│         ├─ Inject Dynamic Data                                                                │
+│         ├─ Add Attachments (if any)                                                           │
+│         └─ Apply HTML Styling                                                                │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Select Mail Provider] ◇                                                                     │
+│         ├─ Postmark API                                                                       │
+│         ├─ Resend API                                                                         │
+│         └─ AWS SES                                                                            │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Send Email]                                                                                  │
+│         │                                                                                        │
+│         ├─ ◇ [Delivery Success?]                                                              │
+│         │    ├─ Yes: [Log Delivery]                                                           │
+│         │    │       [Update Email Status: Sent]                                              │
+│         │    │       [Update Job: Complete]                                                   │
+│         │    └─ No: [Retry Logic Triggered]                                                  │
+│         │           [Log Failure]                                                             │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Email Sent & Logged]                                                                        │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ↓
+
+┌─── STREAM 6: SLACK NOTIFICATION SYSTEM ──────────────────────────────────────────────────────────┐
+│                                                                                                     │
+│  [Critical Alerts & Important Events]                                                          │
+│         │                                                                                        │
+│         ├─ High-Risk Maternal Record Created                                                   │
+│         ├─ Malnourished Child Alert                                                           │
+│         ├─ Overdue Health Checkup                                                             │
+│         ├─ System Job Failure                                                                 │
+│         └─ Daily Summary Statistics                                                           │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Prepare Slack Message]                                                                      │
+│         ├─ Format Alert Content                                                               │
+│         ├─ Add Relevant Context                                                               │
+│         ├─ Include Action Links                                                               │
+│         └─ Set Message Priority/Color                                                         │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Send to Slack Channel]                                                                      │
+│         │                                                                                        │
+│         ├─ Notification Channel (default)                                                     │
+│         ├─ Alerts Channel                                                                     │
+│         ├─ Admin Channel                                                                      │
+│         └─ System Channel                                                                     │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Slack Message Delivered]                                                                    │
+│  [Admin Notified & Can Take Immediate Action]                                                │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ↓
+
+┌─── STREAM 7: DASHBOARD METRICS & CACHING ────────────────────────────────────────────────────────┐
+│                                                                                                     │
+│  [Real-Time Updates & Scheduled Refreshes]                                                     │
+│         │                                                                                        │
+│         ├─ Event-Based Updates (Immediate)                                                     │
+│         │  ├─ New Record Added → Refresh "Total Records" Card                                 │
+│         │  ├─ Risk Level Changed → Update "High-Risk Count"                                   │
+│         │  └─ Alert Generated → Update "Active Alerts" Widget                                 │
+│         │                                                                                        │
+│         └─ Scheduled Updates (Hourly/Daily)                                                   │
+│            ├─ Cache Dashboard Stats                                                            │
+│            ├─ Aggregate Health Metrics                                                        │
+│            ├─ Update Trend Charts                                                             │
+│            └─ Refresh Barangay Breakdown                                                      │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Store in Cache] (Redis/Database)                                                            │
+│         ├─ Key: 'maternal_stats'        → TTL: 3600s (1 hour)                               │
+│         ├─ Key: 'nutrition_stats'       → TTL: 3600s (1 hour)                               │
+│         ├─ Key: 'alerts_active'         → TTL: 300s (5 min)                                 │
+│         ├─ Key: 'user_permissions'      → TTL: 600s (10 min)                                │
+│         └─ Key: 'barangay_breakdown'    → TTL: 86400s (1 day)                               │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Dashboard Loads Metrics from Cache]                                                         │
+│         ├─ Fast Page Load (< 200ms)                                                           │
+│         ├─ Reduced Database Queries                                                           │
+│         ├─ Better Server Performance                                                          │
+│         └─ Improved User Experience                                                           │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ↓
+
+┌─── CONVERGENCE: MONITORING & LOGGING ────────────────────────────────────────────────────────────┐
+│                                                                                                     │
+│  [All System Events & Processes Log to Centralized System]                                    │
+│         │                                                                                        │
+│         ├─ Event Logs: Every action tracked                                                   │
+│         ├─ Error Logs: Any failures recorded                                                  │
+│         ├─ Job Logs: Queue job status tracked                                                 │
+│         ├─ Email Logs: Delivery status stored                                                 │
+│         ├─ Access Logs: User actions monitored                                                │
+│         └─ Audit Trail: Compliance & security tracking                                       │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [Admin Can Monitor System Health]                                                            │
+│         ├─ View Failed Jobs                                                                   │
+│         ├─ Check Email Delivery Status                                                        │
+│         ├─ Monitor Queue Performance                                                          │
+│         ├─ Review System Alerts                                                               │
+│         └─ Generate Audit Reports                                                             │
+│         │                                                                                        │
+│         ↓                                                                                        │
+│  [System Alert Dashboard]                                                                     │
+│         └─ Critical Issues → Immediate Action Required                                        │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                    END OF PROCESS FLOW                                          │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+LEGEND:
+┌─────┐  = Process/Activity
+◇    = Decision Point (Gateway)
+[    ] = System Component
+│ ├─ = Flow Control
+→    = Process Flow
+↓    = Vertical Flow
+/\   = Parallel Paths
 ```
 
 ---
 
-#### 4.3.2 Maternal Health Monitoring - Data Analysis Workflow
+**Master Diagram Components:**
 
-**Process Name:** Automated Risk Assessment and Monitoring
+This comprehensive diagram integrates all system processes:
 
-```
-[Scheduled Job - Daily at 8 AM]
-   ↓
-[Fetch All Maternal Records]
-   ↓
-[Analyze Each Record]
-   ├─ Days Since Checkup > 30?
-   │  └─ Yes → [Mark for Attention]
-   │            ↓
-   │           [Generate Alert]
-   │            ↓
-   │           [Notify Admin via Slack]
-   │            ↓
-   │           [Log Event]
-   └─ No → Continue
-   ↓
-[Check Pregnancy Stage Transitions]
-   ├─ Moving to 3rd Trimester? → [Generate Report]
-   │                              ↓
-   │                             [Store Report]
-   │                              ↓
-   │                             [Email to Healthcare Provider]
-   └─ Other Stage? → Continue
-   ↓
-[Update Dashboard Statistics]
-   ├─ Total Active Records
-   ├─ High-Risk Count
-   ├─ Overdue Checkups
-   └─ By Risk Level Distribution
-   ↓
-[Store Metrics in Cache]
-   ↓
-[End - Task Complete]
-```
+1. **Authentication Stream** - User login and role-based routing
+2. **Maternal Management Stream** - Record creation and health monitoring
+3. **Nutrition Monitoring Stream** - Child health analysis and alerts
+4. **Report Generation Stream** - On-demand PDF creation
+5. **Email Notification Stream** - Queue-based email delivery
+6. **Slack Integration Stream** - Real-time admin notifications
+7. **Dashboard & Caching Stream** - Performance optimization
+8. **Monitoring & Logging Stream** - System health tracking
 
-**Automated Components:**
-- Laravel Scheduled Jobs (Kernel.php)
-- Background data analysis
-- Conditional branching based on thresholds
-- Multi-channel notifications (Email, Slack)
-- Dashboard metric caching for performance
+**Key Automation Features:**
 
-**Implementation:**
-```php
-// app/Console/Kernel.php
-$schedule->job(new AnalyzeMaternalRecords::class)
-    ->dailyAt('08:00');
+✅ **Event-Driven Architecture** - Actions trigger automated responses  
+✅ **Asynchronous Processing** - Jobs run in background without blocking users  
+✅ **Multi-Channel Notifications** - Email, Slack, and in-app alerts  
+✅ **Scheduled Tasks** - Daily/monthly automated jobs  
+✅ **Smart Branching** - Conditional logic based on health thresholds  
+✅ **Error Handling** - Retry mechanisms with exponential backoff  
+✅ **Performance Optimization** - Caching for dashboard metrics  
+✅ **Audit Trail** - Complete logging of all events
 
-$schedule->call(function () {
-    // Update cache metrics
-    Cache::remember('maternal_stats', 3600, function () {
-        return MaternalRecord::statistics();
-    });
-})->hourly();
-```
+**System Integration Points:**
 
----
-
-#### 4.3.3 Child Nutrition Monitoring - Automated Analysis
-
-**Process Name:** Child Nutrition Status Tracking and Alert System
-
-```
-[Monthly Scheduled Check]
-   ↓
-[Fetch All Child Nutrition Records]
-   ↓
-[For Each Child Record]
-   ├─ Calculate BMI
-   │  ├─ Malnourished (<-2 SD)?
-   │  │  └─ Yes → [Flag as Malnourished]
-   │  │           ↓
-   │  │          [Generate Alert]
-   │  │           ↓
-   │  │          [Queue Notification Email]
-   │  │           ↓
-   │  │          [Create Dashboard Alert Card]
-   │  │           ↓
-   │  │          [Log Alert Event]
-   │  ├─ At Risk (-1 to -2 SD)?
-   │  │  └─ Yes → [Flag as At Risk]
-   │  │           ↓
-   │  │          [Store For Monitoring]
-   │  └─ Normal (>-1 SD)?
-   │     └─ [No Action Required]
-   ├─ Check Weight Gain Trend
-   │  ├─ Declining?
-   │  │  └─ Yes → [Alert Healthcare Provider]
-   │  └─ Improving?
-   │     └─ [Log Progress]
-   └─ Generate Performance Report
-      ↓
-[Aggregate Statistics]
-   ├─ Total Malnourished
-   ├─ Total At Risk
-   ├─ Improvement Rate
-   └─ By Barangay Distribution
-   ↓
-[Cache Dashboard Metrics]
-   ↓
-[Send Summary Report to Admin]
-   ↓
-[End - Monitoring Complete]
-```
-
-**Automated Components:**
-- BMI calculation automation
-- Status classification logic
-- Multi-tier alerting system
-- Historical trend analysis
-- Geographic aggregation
-
-**Event Flow:**
-```
-Child Record Updated
-    ↓
-ChildNutritionUpdated Event Dispatched
-    ↓
-Listeners:
-├─ RecalculateNutritionStatus
-├─ CheckMalnourishmentThreshold
-├─ NotifyHealthcareProvider
-└─ UpdateDashboardMetrics
-```
-
----
-
-#### 4.3.4 Report Generation - On-Demand Automation
-
-**Process Name:** Automated PDF Report Generation Workflow
-
-```
-[User Requests Report]
-   ↓
-[Select Report Type & Parameters]
-   ├─ Maternal Health Report
-   ├─ Child Nutrition Report
-   ├─ Risk Assessment Summary
-   └─ Barangay Statistics
-   ↓
-[Validate Parameters]
-   ├─ Valid? → [Queue PDF Generation Job]
-   │            ↓
-   │           [Fetch Required Data]
-   │            ↓
-   │           [Apply Filters & Sorting]
-   │            ↓
-   │           [Format Data for PDF]
-   │            ↓
-   │           [Generate PDF File]
-   │            ↓
-   │           [Store in Storage]
-   │            ↓
-   │           [Send Download Link via Email]
-   │            ↓
-   │           [Display Success Message]
-   │            ↓
-   │           [End - Download Ready]
-   └─ Invalid? → [Return Error]
-                  ↓
-                 [End - Request Failed]
-```
-
-**Automated Components:**
-- Asynchronous job processing
-- Data aggregation and formatting
-- PDF generation (DomPDF library)
-- File storage management
-- Email delivery with attachment/link
-
-**Queue Job Implementation:**
-```php
-// app/Jobs/GeneratePdfReport.php
-public function handle()
-{
-    $data = $this->gatherReportData();
-    $pdf = PDF::loadView('reports.' . $this->reportType, $data);
-    $path = $pdf->save(storage_path('reports/' . $filename));
-    
-    Mail::send(new ReportGenerated($path));
-}
-```
-
----
-
-#### 4.3.5 User Authentication & Role Management - Automated Flow
-
-**Process Name:** User Login, Role Assignment, and Dashboard Routing
-
-```
-[User Visits Login Page]
-   ↓
-[Enter Credentials]
-   ↓
-[Submit Login Form]
-   ↓
-[Verify Credentials Against Database]
-   ├─ Credentials Valid?
-   │  ├─ Yes → [Create Session/Token]
-   │  │        ↓
-   │  │       [Log Login Event]
-   │  │        ↓
-   │  │       [Check User Role]
-   │  │        ├─ Admin?
-   │  │        │  └─ [Redirect to Admin Dashboard]
-   │  │        │     ↓
-   │  │        │    [Load Admin Widgets]
-   │  │        │     └─ Maternal Records, Child Nutrition, Stats
-   │  │        └─ User/Staff?
-   │  │           └─ [Redirect to User Dashboard]
-   │  │              ↓
-   │  │             [Load User-Specific Data]
-   │  │              └─ My Patients, My Records
-   │  │        ↓
-   │  │       [Cache User Permissions]
-   │  │        ↓
-   │  │       [Display Success Message]
-   │  │        ↓
-   │  │       [End - Session Active]
-   └─ No → [Log Failed Attempt]
-           ↓
-          [Increment Failed Count]
-           ├─ Attempts > 5?
-           │  └─ Lock Account Temporarily
-           │     ↓
-           │    [Notify User]
-           └─ Attempts ≤ 5?
-              └─ [Display Error]
-                 ↓
-                [End - Return to Login]
-```
-
-**Automated Components:**
-- Credential verification
-- Session/token generation
-- Role-based routing
-- Failed attempt tracking
-- Account security measures
-
-**Laravel Implementation:**
-```php
-// Middleware Routes
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::middleware('IsAdmin')->group(function () {
-        // Admin routes
-    });
-    Route::middleware('IsUser')->group(function () {
-        // User routes
-    });
-});
-```
-
----
-
-#### 4.3.6 Email Notification System - Automated Queue
-
-**Process Name:** Transactional Email Delivery Pipeline
-
-```
-[System Triggers Email Event]
-   ├─ Maternal Record Created
-   ├─ High-Risk Alert
-   ├─ Report Ready
-   ├─ Password Reset
-   └─ Verification Email
-   ↓
-[Email Event Listener Triggered]
-   ↓
-[Queue Email Job]
-   ├─ Using Driver: Database/Redis
-   ├─ Set Priority: High/Normal/Low
-   └─ Set Retry Count: 3 times
-   ↓
-[Queue Worker Processes Job]
-   ├─ Failed Retry < 3?
-   │  └─ Retry with exponential backoff
-   └─ Failed Retry = 3?
-      └─ Move to Failed Queue
-   ↓
-[Format Email Template]
-   ├─ Blade Template Rendering
-   ├─ Dynamic Content Insertion
-   └─ Attachment Processing
-   ↓
-[Select Mail Provider]
-   ├─ Postmark API
-   ├─ Resend API
-   └─ AWS SES
-   ↓
-[Send Email]
-   ├─ Success? → [Log Delivery]
-   │             ↓
-   │            [Update Email Status]
-   │             ↓
-   │            [Complete]
-   └─ Failed? → [Retry Logic]
-                 ↓
-                [Log Failure]
-```
-
-**Automated Components:**
-- Event-driven email triggering
-- Queue-based delivery
-- Retry mechanisms
-- Multi-provider support
-- Delivery tracking
-
-**Configuration:**
-```php
-// config/mail.php
-'driver' => env('MAIL_DRIVER', 'postmark'),
-'queue' => [
-    'driver' => 'database',
-    'retry_after' => 300,
-],
-'postmark' => [
-    'secret' => env('POSTMARK_API_KEY'),
-],
-```
+- All streams converge through the Laravel event system
+- Queue worker processes background jobs
+- Cache stores hot data for fast retrieval
+- Mail providers handle email delivery
+- Slack API manages instant notifications
+- Database maintains records and logs
 
 ---
 
