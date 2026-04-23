@@ -259,7 +259,7 @@
 </div>
 
 <!-- View Modal -->
-<div id="viewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+<div id="viewModal" style="display: none;" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black bg-opacity-50 flex">
     <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="sticky top-0 bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4 flex justify-between items-center">
             <h3 class="text-xl font-bold text-white">Maternal Record Details</h3>
@@ -314,7 +314,7 @@
 </div>
 
 <!-- Archive Confirmation Modal -->
-<div id="archiveModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+<div id="archiveModal" style="display: none;" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black bg-opacity-50 flex">
     <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
         <div class="bg-red-600 px-6 py-4">
             <h3 class="text-xl font-bold text-white">⚠️ Confirm Archive</h3>
@@ -342,7 +342,7 @@
 </div>
 
 <!-- Restore Confirmation Modal -->
-<div id="restoreModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+<div id="restoreModal" style="display: none;" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black bg-opacity-50 flex">
     <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
         <div class="bg-amber-600 px-6 py-4">
             <h3 class="text-xl font-bold text-white">↩️ Confirm Restore</h3>
