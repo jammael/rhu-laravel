@@ -165,12 +165,18 @@
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Risk Level</th>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Last Checkup</th>
                                 <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Expected Delivery</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             @foreach ($records as $record)
-                                <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $record->full_name }}</td>
+                                <tr class="hover:bg-gray-50 transition {{ $record->trashed() ? 'bg-gray-100 opacity-75' : '' }}">
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-800">
+                                        {{ $record->full_name }}
+                                        @if($record->trashed())
+                                            <span class="ml-2 text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded">Archived</span>
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->age }} years</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">
                                         @if ($record->pregnancy_stage === 'first_trimester')
@@ -192,6 +198,36 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->last_checkup_date->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->expected_delivery_date->format('M d, Y') }}</td>
+                                    <td class="px-6 py-4 text-sm">
+                                        <div class="flex gap-2 flex-wrap">
+                                            <!-- View Button -->
+                                            <button onclick="openViewModal({{ $record }})" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition">
+                                                👁 View
+                                            </button>
+
+                                            @if(!$record->trashed())
+                                                <!-- Edit Button -->
+                                                <a href="{{ route('maternal.edit', $record->id) }}" class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition">
+                                                    ✏️ Edit
+                                                </a>
+
+                                                <!-- Archive Button -->
+                                                <button onclick="openArchiveModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
+                                                    🗑️ Archive
+                                                </button>
+
+                                                <!-- Report Button -->
+                                                <a href="{{ route('maternal.pdf', $record->id) }}" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition">
+                                                    📄 Report
+                                                </a>
+                                            @else
+                                                <!-- Restore Button -->
+                                                <button onclick="openRestoreModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition">
+                                                    ↩️ Restore
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -212,5 +248,183 @@
     </div>
 
 </div>
+
+<!-- View Modal -->
+<div id="viewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-white">Maternal Record Details</h3>
+            <button onclick="closeViewModal()" class="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2">
+                ✕
+            </button>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Full Name</label>
+                    <p id="modalFullName" class="text-lg font-semibold text-slate-800"></p>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Age</label>
+                    <p id="modalAge" class="text-lg font-semibold text-slate-800"></p>
+                </div>
+                <div class="col-span-2">
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Address</label>
+                    <p id="modalAddress" class="text-sm text-slate-700"></p>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Contact Number</label>
+                    <p id="modalContact" class="text-sm text-slate-700"></p>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Pregnancy Stage</label>
+                    <p id="modalStage" class="text-sm text-slate-700"></p>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Last Checkup Date</label>
+                    <p id="modalCheckup" class="text-sm text-slate-700"></p>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Expected Delivery Date</label>
+                    <p id="modalDelivery" class="text-sm text-slate-700"></p>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 uppercase">Risk Level</label>
+                    <p id="modalRisk" class="text-sm text-slate-700"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+            <button onclick="closeViewModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-lg transition">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Archive Confirmation Modal -->
+<div id="archiveModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
+        <div class="bg-red-600 px-6 py-4">
+            <h3 class="text-xl font-bold text-white">⚠️ Confirm Archive</h3>
+        </div>
+
+        <div class="p-6">
+            <p class="text-slate-700 mb-2">Are you sure you want to archive this maternal record?</p>
+            <p id="archivePatientName" class="text-lg font-bold text-red-600 mb-4"></p>
+            <p class="text-sm text-slate-600">This record will be hidden from the main view but kept in the database for medical history retention. You can restore it later if needed.</p>
+        </div>
+
+        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+            <button onclick="closeArchiveModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-lg transition">
+                Cancel
+            </button>
+            <form id="archiveForm" method="POST" style="display: inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition">
+                    Archive Record
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Restore Confirmation Modal -->
+<div id="restoreModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
+        <div class="bg-amber-600 px-6 py-4">
+            <h3 class="text-xl font-bold text-white">↩️ Confirm Restore</h3>
+        </div>
+
+        <div class="p-6">
+            <p class="text-slate-700 mb-2">Are you sure you want to restore this archived maternal record?</p>
+            <p id="restorePatientName" class="text-lg font-bold text-amber-600 mb-4"></p>
+            <p class="text-sm text-slate-600">This record will be restored to the active list and be visible in the main view again.</p>
+        </div>
+
+        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+            <button onclick="closeRestoreModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-lg transition">
+                Cancel
+            </button>
+            <form id="restoreForm" method="POST" style="display: inline;">
+                @csrf
+                @method('PATCH')
+                <button type="submit" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-lg transition">
+                    Restore Record
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // View Modal Functions
+    function openViewModal(record) {
+        document.getElementById('modalFullName').textContent = record.full_name;
+        document.getElementById('modalAge').textContent = record.age + ' years';
+        document.getElementById('modalAddress').textContent = record.address;
+        document.getElementById('modalContact').textContent = record.contact_number;
+
+        const stageLabels = {
+            'first_trimester': '1st Trimester (0-3 months)',
+            'second_trimester': '2nd Trimester (4-6 months)',
+            'third_trimester': '3rd Trimester (7-9 months)'
+        };
+        document.getElementById('modalStage').textContent = stageLabels[record.pregnancy_stage] || record.pregnancy_stage;
+        document.getElementById('modalCheckup').textContent = new Date(record.last_checkup_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        document.getElementById('modalDelivery').textContent = new Date(record.expected_delivery_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+        const riskLabels = {
+            'low': '🟢 Low Risk',
+            'medium': '🟡 Medium Risk',
+            'high': '🔴 High Risk'
+        };
+        document.getElementById('modalRisk').textContent = riskLabels[record.risk_level] || record.risk_level;
+
+        document.getElementById('viewModal').classList.remove('hidden');
+    }
+
+    function closeViewModal() {
+        document.getElementById('viewModal').classList.add('hidden');
+    }
+
+    // Archive Modal Functions
+    function openArchiveModal(recordId, patientName) {
+        document.getElementById('archivePatientName').textContent = patientName;
+        const baseUrl = "{{ url('/maternal-care') }}";
+        document.getElementById('archiveForm').action = baseUrl + '/' + recordId;
+        document.getElementById('archiveModal').classList.remove('hidden');
+    }
+
+    function closeArchiveModal() {
+        document.getElementById('archiveModal').classList.add('hidden');
+    }
+
+    // Restore Modal Functions
+    function openRestoreModal(recordId, patientName) {
+        document.getElementById('restorePatientName').textContent = patientName;
+        const baseUrl = "{{ url('/maternal-care') }}";
+        document.getElementById('restoreForm').action = baseUrl + '/' + recordId + '/restore';
+        document.getElementById('restoreModal').classList.remove('hidden');
+    }
+
+    function closeRestoreModal() {
+        document.getElementById('restoreModal').classList.add('hidden');
+    }
+
+    // Close modals when clicking outside
+    document.getElementById('viewModal').addEventListener('click', function(e) {
+        if (e.target === this) closeViewModal();
+    });
+    document.getElementById('archiveModal').addEventListener('click', function(e) {
+        if (e.target === this) closeArchiveModal();
+    });
+    document.getElementById('restoreModal').addEventListener('click', function(e) {
+        if (e.target === this) closeRestoreModal();
+    });
+</script>
 
 @endsection

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MaternalRecord extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'full_name',
         'age',
@@ -21,4 +24,6 @@ class MaternalRecord extends Model
         'last_checkup_date' => 'date',
         'expected_delivery_date' => 'date',
     ];
+
+    protected $dates = ['deleted_at'];
 }

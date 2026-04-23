@@ -35,6 +35,12 @@ Route::get('/admin/dashboard', [AdminController::class,
 // Maternal Care Routes
 Route::get('/maternal-care', [MaternalController::class, 'index'])->name('maternal.index');
 Route::post('/maternal-care/store', [MaternalController::class, 'store'])->name('maternal.store');
+Route::get('/maternal-care/{maternalRecord}', [MaternalController::class, 'show'])->name('maternal.show');
+Route::get('/maternal-care/{maternalRecord}/edit', [MaternalController::class, 'edit'])->name('maternal.edit');
+Route::patch('/maternal-care/{maternalRecord}', [MaternalController::class, 'update'])->name('maternal.update');
+Route::delete('/maternal-care/{maternalRecord}', [MaternalController::class, 'destroy'])->name('maternal.destroy');
+Route::patch('/maternal-care/{id}/restore', [MaternalController::class, 'restore'])->name('maternal.restore');
+Route::get('/maternal-care/{maternalRecord}/pdf', [MaternalController::class, 'generatePDF'])->name('maternal.pdf');
 
 // Child Nutrition Routes
 Route::get('/child-nutrition', [ChildNutritionController::class, 'index'])->name('child-nutrition.index');
