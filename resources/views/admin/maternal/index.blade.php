@@ -207,36 +207,67 @@
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->last_checkup_date->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->expected_delivery_date->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 text-sm">
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <!-- View Button -->
-                                            <button onclick="openViewModal({{ $record }})" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition">
-                                                👁 View
-                                            </button>
+                                        <!-- Container: Fixed width to prevent overlapping -->
+<div class="flex items-center justify-center gap-3">
+        <!-- View Button (Modal Trigger) -->
+        <button
+            onclick="openViewModal({{ $record }})"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition-all duration-200 hover:scale-110"
+            title="View Details"
+        >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+        </button>
 
-                                            @if(!$record->trashed())
-                                                <!-- Edit Button -->
-                                                <a href="{{ route('maternal.edit', $record) }}" class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition">
-                                                    ✏️ Edit
-                                                </a>
+        @if(!$record->trashed())
+            <!-- Edit Button -->
+            <a
+                href="{{ route('maternal.edit', $record->id) }}"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 hover:scale-110"
+                title="Edit Record"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+            </a>
 
-                                                <!-- Report Button -->
-                                                <a href="{{ route('maternal.pdf', $record) }}" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition">
-                                                    📄 Report
-                                                </a>
+            <!-- Report Button (PDF) -->
+            <a
+                href="{{ route('maternal.pdf', $record->id) }}"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all duration-200 hover:scale-110"
+                title="Download Report"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </a>
 
-                                                <!-- Archive Button -->
-                                                <button onclick="openArchiveModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
-                                                    🗑️ Archive
-                                                </button>
-
-                                            @else
-                                                <!-- Restore Button -->
-                                                <button onclick="openRestoreModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition">
-                                                    ↩️ Restore
-                                                </button>
-                                            @endif
-                                        </div>
-                                    </td>
+            <!-- Archive Button -->
+            <button
+                onclick="openArchiveModal({{ $record->id }}, '{{ $record->full_name }}')"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 hover:scale-110"
+                title="Archive"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                </svg>
+            </button>
+        @else
+            <!-- Restore Button -->
+            <button
+                onclick="openRestoreModal({{ $record->id }}, '{{ $record->full_name }}')"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 transition-all duration-200 hover:scale-110"
+                title="Restore"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+            </button>
+        @endif
+    </div>
+                            </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -259,7 +290,7 @@
 </div>
 
 <!-- View Modal -->
-<div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+<div id="viewModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 p-4" style="display: none; align-items: center; justify-content: center;">
     <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="sticky top-0 bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4 flex justify-between items-center">
             <h3 class="text-xl font-bold text-white">Maternal Record Details</h3>
@@ -314,14 +345,11 @@
 </div>
 
 <!-- Archive Confirmation Modal -->
-<div x-data="{ open: false }" @open-archive.window="open = true" id="archiveModal">
-    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-        <div class="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden" @click.away="open = false">
-            <div class="bg-red-600 px-6 py-4">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fas fa-exclamation-triangle"></i> Confirm Archive
-                </h3>
-            </div>
+<div id="archiveModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 p-4" style="display: none; align-items: center; justify-content: center;">
+    <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
+        <div class="bg-red-600 px-6 py-4">
+            <h3 class="text-xl font-bold text-white">⚠️ Confirm Archive</h3>
+        </div>
 
         <div class="p-6">
             <p class="text-slate-700 mb-2">Are you sure you want to archive this maternal record?</p>
@@ -345,14 +373,11 @@
 </div>
 
 <!-- Restore Confirmation Modal -->
-<div x-data="{ open: false }" @open-restore.window="open = true" id="restoreModal">
-    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-        <div class="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden" @click.away="open = false">
-            <div class="bg-amber-600 px-6 py-4">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fas fa-undo"></i> Confirm Restore
-                </h3>
-            </div>
+<div id="restoreModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 p-4" style="display: none; align-items: center; justify-content: center;">
+        <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
+        <div class="bg-amber-600 px-6 py-4">
+            <h3 class="text-xl font-bold text-white">↩️ Confirm Restore</h3>
+        </div>
 
         <div class="p-6">
             <p class="text-slate-700 mb-2">Are you sure you want to restore this archived maternal record?</p>
@@ -399,11 +424,13 @@
         };
         document.getElementById('modalRisk').textContent = riskLabels[record.risk_level] || record.risk_level;
 
-        document.getElementById('viewModal').classList.remove('hidden');
+        // FIXED: Change display to flex to show and center the modal
+        document.getElementById('viewModal').style.display = 'flex';
     }
 
     function closeViewModal() {
-        document.getElementById('viewModal').classList.add('hidden');
+        // FIXED: Change display to none to hide
+        document.getElementById('viewModal').style.display = 'none';
     }
 
     // Archive Modal Functions
@@ -411,11 +438,14 @@
         document.getElementById('archivePatientName').textContent = patientName;
         const baseUrl = "{{ url('/maternal-care') }}";
         document.getElementById('archiveForm').action = baseUrl + '/' + recordId;
-        document.getElementById('archiveModal').classList.remove('hidden');
+
+        // FIXED: Change display to flex
+        document.getElementById('archiveModal').style.display = 'flex';
     }
 
     function closeArchiveModal() {
-        document.getElementById('archiveModal').classList.add('hidden');
+        // FIXED: Change display to none
+        document.getElementById('archiveModal').style.display = 'none';
     }
 
     // Restore Modal Functions
@@ -423,11 +453,14 @@
         document.getElementById('restorePatientName').textContent = patientName;
         const baseUrl = "{{ url('/maternal-care') }}";
         document.getElementById('restoreForm').action = baseUrl + '/' + recordId + '/restore';
-        document.getElementById('restoreModal').classList.remove('hidden');
+
+        // FIXED: Change display to flex
+        document.getElementById('restoreModal').style.display = 'flex';
     }
 
     function closeRestoreModal() {
-        document.getElementById('restoreModal').classList.add('hidden');
+        // FIXED: Change display to none
+        document.getElementById('restoreModal').style.display = 'none';
     }
 
     // Close modals when clicking outside
@@ -441,5 +474,4 @@
         if (e.target === this) closeRestoreModal();
     });
 </script>
-
 @endsection
