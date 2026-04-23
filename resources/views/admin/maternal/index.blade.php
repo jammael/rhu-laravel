@@ -154,6 +154,14 @@
 
         <!-- Records Table -->
         <div class="rounded-xl bg-white shadow-sm border border-gray-100 overflow-hidden">
+            <!-- Table Header with View Archived Button -->
+            <div class="bg-slate-50 border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">📋 Maternal Records</h3>
+                <a href="{{ route('maternal.index', ['show_archived' => 1]) }}" class="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white text-sm font-semibold rounded-lg transition">
+                    📦 View Archived Records
+                </a>
+            </div>
+
             @if ($records->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -199,30 +207,31 @@
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->last_checkup_date->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->expected_delivery_date->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 text-sm">
-                                        <div class="flex gap-2 flex-wrap">
+                                        <div class="grid grid-cols-2 gap-2">
                                             <!-- View Button -->
-                                            <button onclick="openViewModal({{ $record }})" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition">
+                                            <button onclick="openViewModal({{ $record }})" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition">
                                                 👁 View
                                             </button>
 
                                             @if(!$record->trashed())
                                                 <!-- Edit Button -->
-                                                <a href="{{ route('maternal.edit', $record->id) }}" class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition">
+                                                <a href="{{ route('maternal.edit', $record) }}" class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition">
                                                     ✏️ Edit
                                                 </a>
 
+                                                <!-- Report Button -->
+                                                <a href="{{ route('maternal.pdf', $record) }}" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition">
+                                                    📄 Report
+                                                </a>
+
                                                 <!-- Archive Button -->
-                                                <button onclick="openArchiveModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
+                                                <button onclick="openArchiveModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
                                                     🗑️ Archive
                                                 </button>
 
-                                                <!-- Report Button -->
-                                                <a href="{{ route('maternal.pdf', $record->id) }}" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition">
-                                                    📄 Report
-                                                </a>
                                             @else
                                                 <!-- Restore Button -->
-                                                <button onclick="openRestoreModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition">
+                                                <button onclick="openRestoreModal({{ $record->id }}, '{{ $record->full_name }}')" class="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition">
                                                     ↩️ Restore
                                                 </button>
                                             @endif
