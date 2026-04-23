@@ -43,5 +43,6 @@
     </div>
     <!-- ===== Page Wrapper End ===== -->
 
-</>
+    @stack('scripts')
+</body>
 </html>

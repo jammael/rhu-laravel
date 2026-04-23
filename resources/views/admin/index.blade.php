@@ -196,6 +196,128 @@
 
 </div>
 
+<!-- ========== NUTRITIONAL GROWTH TRENDS CHART ========== -->
+<div class="mt-6">
+    <div class="rounded-lg border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div class="mb-6">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <span>📈</span> Nutritional Growth Trends
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">Last 3 Months - Normal vs Underweight Children</p>
+        </div>
 
+        <!-- Chart Container -->
+        <div class="relative h-64">
+            <canvas id="nutritionalGrowthChart" class="max-h-64"></canvas>
+        </div>
+
+        <!-- Chart Legend Info -->
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-100">
+                <div class="w-4 h-4 rounded bg-green-500"></div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-700">Normal Status</p>
+                    <p class="text-xs text-slate-500">Children with healthy nutrition</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-100">
+                <div class="w-4 h-4 rounded bg-yellow-500"></div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-700">Underweight</p>
+                    <p class="text-xs text-slate-500">Including severely underweight cases</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Chart data from controller
+        const chartData = @json($chartData);
+
+        // Get canvas context
+        const ctx = document.getElementById('nutritionalGrowthChart');
+
+        if (ctx) {
+            // Create chart
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.labels,
+                    datasets: chartData.datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                color: '#374151'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 13,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
+                            borderColor: '#e5e7eb',
+                            borderWidth: 1,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + ' children';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f3f4f6',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                },
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush
 
 @endsection
