@@ -259,7 +259,7 @@
 </div>
 
 <!-- View Modal -->
-<div id="viewModal" style="display: none;" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black bg-opacity-50 flex">
+<div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
     <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="sticky top-0 bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4 flex justify-between items-center">
             <h3 class="text-xl font-bold text-white">Maternal Record Details</h3>
@@ -314,11 +314,14 @@
 </div>
 
 <!-- Archive Confirmation Modal -->
-<div id="archiveModal" style="display: none;" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black bg-opacity-50 flex">
-    <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
-        <div class="bg-red-600 px-6 py-4">
-            <h3 class="text-xl font-bold text-white">⚠️ Confirm Archive</h3>
-        </div>
+<div x-data="{ open: false }" @open-archive.window="open = true" id="archiveModal">
+    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+        <div class="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden" @click.away="open = false">
+            <div class="bg-red-600 px-6 py-4">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-exclamation-triangle"></i> Confirm Archive
+                </h3>
+            </div>
 
         <div class="p-6">
             <p class="text-slate-700 mb-2">Are you sure you want to archive this maternal record?</p>
@@ -342,11 +345,14 @@
 </div>
 
 <!-- Restore Confirmation Modal -->
-<div id="restoreModal" style="display: none;" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black bg-opacity-50 flex">
-    <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
-        <div class="bg-amber-600 px-6 py-4">
-            <h3 class="text-xl font-bold text-white">↩️ Confirm Restore</h3>
-        </div>
+<div x-data="{ open: false }" @open-restore.window="open = true" id="restoreModal">
+    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+        <div class="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden" @click.away="open = false">
+            <div class="bg-amber-600 px-6 py-4">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-undo"></i> Confirm Restore
+                </h3>
+            </div>
 
         <div class="p-6">
             <p class="text-slate-700 mb-2">Are you sure you want to restore this archived maternal record?</p>
