@@ -68,6 +68,27 @@
             </a>
           </li>
 
+          <!-- SYSTEM ADMINISTRATION GROUP - Only visible to Admin -->
+          @if(Auth::user() && Auth::user()->role === 'admin')
+          <li class="mt-4 pt-4 border-t border-gray-100">
+            <h3 class="mb-4 text-xs uppercase font-bold text-slate-400">SYSTEM ADMINISTRATION</h3>
+            <ul class="flex flex-col gap-2">
+              <li>
+                <a href="{{ route('admin.users.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-purple-50 hover:text-purple-600 transition">
+                  <span>👥</span>
+                  User Management
+                </a>
+              </li>
+              <li>
+                <a href="{{ route('admin.logs.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-purple-50 hover:text-purple-600 transition">
+                  <span>📋</span>
+                  Activity Logs
+                </a>
+              </li>
+            </ul>
+          </li>
+          @endif
+
           <li class="mt-4 pt-4 border-t border-gray-100">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'status',
     ];
 
     /**
@@ -46,5 +47,74 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check if user is approved.
+     */
+    public function isApproved(): bool
+    {
+        return $this->status === 'approved';
+    }
+
+    /**
+     * Check if user is pending.
+     */
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Check if user is denied.
+     */
+    public function isDenied(): bool
+    {
+        return $this->status === 'denied';
+    }
+
+    /**
+     * Check if user is admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is staff (doctor, nurse, midwife, encoder).
+     */
+    public function isStaff(): bool
+    {
+        return in_array($this->role, ['doctor', 'nurse', 'midwife', 'encoder']);
+    }
+
+    /**
+     * Get the user's role display name.
+     */
+    public function getRoleDisplayName(): string
+    {
+        return match($this->role) {
+            'admin' => 'Administrator',
+            'doctor' => 'Doctor',
+            'nurse' => 'Nurse',
+            'midwife' => 'Midwife',
+            'encoder' => 'Encoder',
+            'user' => 'Patient',
+            default => 'Unknown',
+        };
+    }
+
+    /**
+     * Get the user's status display name.
+     */
+    public function getStatusDisplayName(): string
+    {
+        return match($this->status) {
+            'pending' => 'Pending',
+            'approved' => 'Approved',
+            'denied' => 'Denied',
+            default => 'Unknown',
+        };
     }
 }

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\MaternalController;
 use App\Http\Controllers\Admin\ChildNutritionController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\ActivityLogsController;
 use App\Http\Controllers\PatientController;
 
 Route::get('/', function () {
@@ -29,6 +31,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::get('/admin/dashboard', [AdminController::class,
 'AdminDashboard'])->name('admin.dashboard');
+
+// User Management Routes
+Route::get('/admin/users', [UserManagementController::class, 'index'])->name('admin.users.index');
+Route::post('/admin/users/{user}/approve', [UserManagementController::class, 'approve'])->name('admin.users.approve');
+Route::post('/admin/users/{user}/deny', [UserManagementController::class, 'deny'])->name('admin.users.deny');
+Route::put('/admin/users/{user}/role', [UserManagementController::class, 'updateRole'])->name('admin.users.updateRole');
+Route::delete('/admin/users/{user}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+
+// Activity Logs Routes
+Route::get('/admin/logs', [ActivityLogsController::class, 'index'])->name('admin.logs.index');
 
 });
 ////// End Only for Admin Route
