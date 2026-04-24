@@ -13,14 +13,14 @@ Route::get('/', function () {
 
 
 
-////// Only for user Route
-Route::middleware(['auth', 'user'])->group(function () {
+////// Dashboard Route (for all authenticated users)
+Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 });
-////// End Only for user Route
+////// End Dashboard Route
 
 
 
