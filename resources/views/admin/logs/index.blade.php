@@ -78,37 +78,34 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @php
-                                            $isApproved = str_contains($log->action, 'Approved');
-                                            $isDenied = str_contains($log->action, 'Denied');
-                                            $isDeleted = str_contains($log->action, 'Deleted');
-                                            $isUpdated = str_contains($log->action, 'Updated');
-                                        @endphp
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                                            @if($isApproved)
-                                                bg-green-100 text-green-800
-                                            @elseif($isDenied || $isDeleted)
-                                                bg-red-100 text-red-800
-                                            @elseif($isUpdated)
-                                                bg-blue-100 text-blue-800
-                                            @else
-                                                bg-purple-100 text-purple-800
-                                            @endif
-                                        ">
-                                            @if($isApproved)
-                                                ✓
-                                            @elseif($isDenied)
-                                                ✕
-                                            @elseif($isDeleted)
-                                                🗑
-                                            @elseif($isUpdated)
-                                                🔄
-                                            @else
-                                                📝
-                                            @endif
-                                            {{ $log->action }}
-                                        </span>
-                                    </td>
+    @php
+        // Define settings based on the action string
+        $action = $log->action ?? '';
+
+        if (str_contains($action, 'Approved')) {
+            $class = 'bg-green-100 text-green-800';
+            $icon = '✓';
+        } elseif (str_contains($action, 'Denied')) {
+            $class = 'bg-red-100 text-red-800';
+            $icon = '✕';
+        } elseif (str_contains($action, 'Deleted')) {
+            $class = 'bg-red-100 text-red-800';
+            $icon = '🗑';
+        } elseif (str_contains($action, 'Updated')) {
+            $class = 'bg-blue-100 text-blue-800';
+            $icon = '🔄';
+        } else {
+            $class = 'bg-purple-100 text-purple-800';
+            $icon = '📝';
+        }
+    @endphp
+
+    <span class="px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full {{ $class }}">
+        <span>{{ $icon }}</span>
+        <span>{{ $action }}</span>
+    </span>
+</td>
+
                                     <td class="px-6 py-4">
                                         <div class="text-sm text-gray-900 max-w-xs truncate" title="{{ $log->description }}">
                                             {{ $log->description ?? '-' }}
