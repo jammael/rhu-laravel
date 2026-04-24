@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\MaternalController;
 use App\Http\Controllers\Admin\ChildNutritionController;
-use App\Http\Middleware\IsAdmin;
-use App\Http\Middleware\IsUser;
 use App\Http\Controllers\PatientController;
 
 Route::get('/', function () {
@@ -16,7 +14,7 @@ Route::get('/', function () {
 
 
 ////// Only for user Route
-Route::middleware(['auth', IsUser::class])->group(function () {
+Route::middleware(['auth', 'user'])->group(function () {
 
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -27,7 +25,7 @@ Route::middleware(['auth', IsUser::class])->group(function () {
 
 
 ///// Only for Admin Route
-Route::middleware(['auth', IsAdmin::class])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::get('/admin/dashboard', [AdminController::class,
 'AdminDashboard'])->name('admin.dashboard');
