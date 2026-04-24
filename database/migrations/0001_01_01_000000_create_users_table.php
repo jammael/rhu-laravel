@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
-            $table->enum('role',['admin', 'user'])->default('user');
+            $table->enum('role',['admin', 'user', 'doctor', 'nurse', 'midwife', 'encoder'])->default('user');
             $table->unsignedBigInteger('plan_id')->default(1);
             $table->integer('token_used')->default(0);
             $table->string('status')->default('active');

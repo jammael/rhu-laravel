@@ -30,6 +30,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::get('/admin/dashboard', [AdminController::class,
 'AdminDashboard'])->name('admin.dashboard');
 
+});
+////// End Only for Admin Route
+
+
+
+///// Only for Staff (Health Workers) Route
+Route::middleware(['auth', 'staff'])->group(function () {
+
 // Maternal Care Routes
 Route::get('/maternal-care', [MaternalController::class, 'index'])->name('maternal.index');
 Route::post('/maternal-care/store', [MaternalController::class, 'store'])->name('maternal.store');
@@ -48,7 +56,7 @@ Route::get('/child-nutrition/{id}/report', [ChildNutritionController::class, 'ge
 Route::resource('patients', PatientController::class);
 
 });
-////// End Only for Admin Route
+////// End Only for Staff Route
 
 
 
