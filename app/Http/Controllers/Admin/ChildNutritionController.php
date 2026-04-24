@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChildNutritionRecord;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 
 class ChildNutritionController extends Controller
@@ -38,12 +39,12 @@ class ChildNutritionController extends Controller
 
     /**
      * Store a new child nutrition record
+     * Automatically creates or links to a Patient record
      * Nutritional status is automatically calculated by the observer
      */
     public function store(Request $request)
     {
         // Validate the incoming data
-        // Note: nutritional_status is NOT required - it's auto-calculated by the observer
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'age_months' => 'required|integer|min:0|max:180',
@@ -53,13 +54,40 @@ class ChildNutritionController extends Controller
             'last_weigh_in_date' => 'required|date|before_or_equal:today',
         ]);
 
-        // Create the child nutrition record
-        // Observer will automatically set nutritional_status
-        ChildNutritionRecord::create($validated);
+        // Calculate approximate birthdate from age_months
+        $birthdate = now()->subMonths($validated['age_months']);
+
+        // Check if patient already exists by name and birthdate
+        $patient = Patient::where('name', $validated['full_name'])
+            ->where('barangay', $validated['barangay'])
+            ->first();
+
+        // If no patient exists, create one
+        if (!$patient) {
+            $patient = Patient::create([
+                'name' => $validated['full_name'],
+                'birthdate' => $birthdate,
+                'category' => 'child',
+                'barangay' => $validated['barangay'],
+                'contact_number' => 'N/A', // Default since not provided in form
+            ]);
+        }
+
+        // Create the child nutrition record linked to the patient
+        ChildNutritionRecord::create([
+            'patient_id' => $patient->id,
+            'full_name' => $validated['full_name'],
+            'age_months' => $validated['age_months'],
+            'barangay' => $validated['barangay'],
+            'weight_kg' => $validated['weight_kg'],
+            'height_cm' => $validated['height_cm'],
+            'last_weigh_in_date' => $validated['last_weigh_in_date'],
+            // nutritional_status will be auto-calculated by observer
+        ]);
 
         // Redirect back with success message
         return redirect()->route('child-nutrition.index')
-                        ->with('success', 'Child nutrition record added successfully!');
+                        ->with('success', 'Child nutrition record added successfully! Patient automatically linked.');
     }
 
     /**

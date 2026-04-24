@@ -4,8 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Patient;
+use App\Models\ChildNutritionRecord;
 class PatientController extends Controller
 {
+    /**
+     * Show the selection page for choosing between Maternal or Child enrollment.
+     */
+    public function select()
+    {
+        return view('patients.select');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -45,9 +54,9 @@ class PatientController extends Controller
     public function create(Request $request)
     {
         // Validate that the type parameter is valid
-        $type = $request->query('type', 'pregnant');
-        if (!in_array($type, ['pregnant', 'malnourished'])) {
-            $type = 'pregnant';
+        $type = $request->query('type', 'maternal');
+        if (!in_array($type, ['maternal', 'child'])) {
+            $type = 'maternal';
         }
 
         return view('patients.create', ['type' => $type]);
@@ -59,7 +68,10 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validate the data (Important for clean data!)
+        // 1. Get the type from POST data or query string
+        $type = $request->input('type') ?? $request->query('type', 'maternal');
+
+        // Base validation that applies to all types
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
             'birthdate'      => 'required|date',
@@ -68,10 +80,35 @@ class PatientController extends Controller
             'contact_number' => 'required|string',
         ]);
 
-        // 2. Create the patient in the database
-        Patient::create($validated);
+        // Additional validation for child nutrition records
+        $childValidated = null;
+        if ($type === 'child') {
+            $childValidated = $request->validate([
+                'age_months'         => 'required|integer|min:0|max:180',
+                'weight_kg'          => 'required|numeric|min:0.1|max:100',
+                'height_cm'          => 'required|numeric|min:0.1|max:250',
+                'last_weigh_in_date' => 'required|date',
+            ]);
+        }
 
-        // 3. Redirect back with a success message
+        // 2. Create the patient in the database
+        $patient = Patient::create($validated);
+
+        // 3. If child nutrition type, create linked ChildNutritionRecord
+        if ($type === 'child' && $childValidated) {
+            ChildNutritionRecord::create([
+                'patient_id'         => $patient->id,
+                'full_name'          => $validated['name'],
+                'age_months'         => $childValidated['age_months'],
+                'barangay'           => $validated['barangay'],
+                'weight_kg'          => $childValidated['weight_kg'],
+                'height_cm'          => $childValidated['height_cm'],
+                'last_weigh_in_date' => $childValidated['last_weigh_in_date'],
+                // nutritional_status will be calculated by the observer
+            ]);
+        }
+
+        // 4. Redirect back with a success message
         return redirect()->route('patients.index')->with('success', 'New patient added successfully!');
     }
 

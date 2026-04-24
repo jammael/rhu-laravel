@@ -17,4 +17,12 @@ class Patient extends Model
     protected $casts = [
         'birthdate' => 'date',
     ];
+
+    /**
+     * Get the child nutrition records associated with this patient.
+     */
+    public function childNutritionRecords()
+    {
+        return $this->hasMany(ChildNutritionRecord::class);
+    }
 }

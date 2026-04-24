@@ -7,6 +7,7 @@ use App\Observers\ChildNutritionRecordObserver;
 
 /**
  * @property int $id
+ * @property int $patient_id
  * @property string $full_name
  * @property int $age_months
  * @property string $barangay
@@ -18,6 +19,7 @@ use App\Observers\ChildNutritionRecordObserver;
 class ChildNutritionRecord extends Model
 {
     protected $fillable = [
+        'patient_id',
         'full_name',
         'age_months',
         'barangay',
@@ -38,5 +40,13 @@ class ChildNutritionRecord extends Model
     {
         parent::boot();
         static::observe(ChildNutritionRecordObserver::class);
+    }
+
+    /**
+     * Get the patient associated with this nutrition record.
+     */
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
     }
 }

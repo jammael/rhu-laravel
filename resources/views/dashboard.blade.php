@@ -19,7 +19,7 @@
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
 
                 <!-- Card 1: Add Patient Information (Primary - Larger) -->
-                <a href="{{ route('patients.create') }}" class="group lg:col-span-1 md:row-span-2 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-64">
+                <a href="{{ route('patients.select') }}" class="group lg:col-span-1 md:row-span-2 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-64">
                     <div>
                         <!-- Icon -->
                         <div class="mb-6">
