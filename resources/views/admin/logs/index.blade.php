@@ -78,24 +78,30 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
+                                        @php
+                                            $isApproved = str_contains($log->action, 'Approved');
+                                            $isDenied = str_contains($log->action, 'Denied');
+                                            $isDeleted = str_contains($log->action, 'Deleted');
+                                            $isUpdated = str_contains($log->action, 'Updated');
+                                        @endphp
                                         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                                            @if(str_contains($log->action, 'Approved') || str_contains($log->action, 'Approved'))
+                                            @if($isApproved)
                                                 bg-green-100 text-green-800
-                                            @elseif(str_contains($log->action, 'Denied') || str_contains($log->action, 'Deleted'))
+                                            @elseif($isDenied || $isDeleted)
                                                 bg-red-100 text-red-800
-                                            @elseif(str_contains($log->action, 'Updated'))
+                                            @elseif($isUpdated)
                                                 bg-blue-100 text-blue-800
                                             @else
                                                 bg-purple-100 text-purple-800
                                             @endif
                                         ">
-                                            @if(str_contains($log->action, 'Approved'))
+                                            @if($isApproved)
                                                 ✓
-                                            @elseif(str_contains($log->action, 'Denied'))
+                                            @elseif($isDenied)
                                                 ✕
-                                            @elseif(str_contains($log->action, 'Deleted'))
+                                            @elseif($isDeleted)
                                                 🗑
-                                            @elseif(str_contains($log->action, 'Updated'))
+                                            @elseif($isUpdated)
                                                 🔄
                                             @else
                                                 📝
