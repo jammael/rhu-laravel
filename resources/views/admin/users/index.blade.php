@@ -158,6 +158,14 @@
                                                 </div>
                                             @endif
 
+                                            <!-- Edit Role Button (for all users) -->
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="inline-flex items-center gap-1 px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                </svg>
+                                                <span>Edit</span>
+                                            </a>
+
                                             <!-- Delete Button -->
                                             @if(Auth::id() !== $user->id)
                                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">

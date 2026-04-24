@@ -86,6 +86,37 @@ class UserManagementController extends Controller
     }
 
     /**
+     * Show the form for editing a user's role.
+     */
+    public function edit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    /**
+     * Update a user's role from the edit form.
+     */
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'role' => 'required|in:admin,doctor,nurse,midwife,encoder,user',
+        ]);
+
+        $oldRole = $user->role;
+        $user->update(['role' => $request->role]);
+
+        // Log the activity
+        ActivityLog::log(
+            Auth::user(),
+            'Updated Role',
+            "Changed role for user {$user->name} ({$user->email}) from {$oldRole} to {$request->role}"
+        );
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "User {$user->name}'s role has been updated to {$request->role}.");
+    }
+
+    /**
      * Delete a user.
      */
     public function destroy(User $user)

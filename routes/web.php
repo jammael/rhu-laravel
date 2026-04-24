@@ -34,6 +34,8 @@ Route::get('/admin/dashboard', [AdminController::class,
 
 // User Management Routes
 Route::get('/admin/users', [UserManagementController::class, 'index'])->name('admin.users.index');
+Route::get('/admin/users/{user}/edit', [UserManagementController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/{user}', [UserManagementController::class, 'update'])->name('admin.users.update');
 Route::post('/admin/users/{user}/approve', [UserManagementController::class, 'approve'])->name('admin.users.approve');
 Route::post('/admin/users/{user}/deny', [UserManagementController::class, 'deny'])->name('admin.users.deny');
 Route::put('/admin/users/{user}/role', [UserManagementController::class, 'updateRole'])->name('admin.users.updateRole');
@@ -65,6 +67,8 @@ Route::get('/child-nutrition', [ChildNutritionController::class, 'index'])->name
 Route::post('/child-nutrition/store', [ChildNutritionController::class, 'store'])->name('child-nutrition.store');
 Route::get('/child-nutrition/{id}/report', [ChildNutritionController::class, 'generateChildHealthReport'])->name('child-nutrition.report');
 
+// Patient Routes
+Route::get('/patients/select', [PatientController::class, 'select'])->name('patients.select');
 Route::resource('patients', PatientController::class);
 
 });
