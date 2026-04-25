@@ -1,0 +1,49 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Environment variables (should NOT be uploaded - use Vercel environment variables)
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules
+vendor
+
+# Development files
+.editorconfig
+.eslintrc
+.prettierrc
+.nvmrc
+npm-debug.log
+yarn-error.log
+composer.lock
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+# Development/documentation
+README.md
+*.md
+ADMIN_PANEL_DOCS.md
+CAPSTONE_MANUSCRIPT.md
+COMPLETION_CHECKLIST.md
+
+# Testing
+tests
+phpunit.xml
+package.json
+webpack.mix.js
+tsconfig.json
+
+# Cache and temporary files
+.cache
+tmp
+temp
