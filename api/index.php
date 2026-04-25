@@ -1,5 +1,5 @@
 <?php
-
+// require __DIR__ . '/../public/index.php';
 // This file is the entry point for Vercel serverless functions
 // It bridges incoming requests to the Laravel application
 
