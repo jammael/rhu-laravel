@@ -1,26 +1,31 @@
-<?php
 
+<?php
 use App\Models\User;
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\get;
+use function Pest\Laravel\assertGuest;
+use function Pest\Laravel\patch;
+use function Pest\Laravel\delete;
+use function Pest\Laravel\from;
+
 
 test('profile page is displayed', function () {
-    $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->get('/profile');
+    $user = User::factory()->create();
+    actingAs($user);
+    $response = get('/profile');
 
     $response->assertOk();
 });
 
 test('profile information can be updated', function () {
-    $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->patch('/profile', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+    $user = User::factory()->create();
+    actingAs($user);
+    $response = patch('/profile', [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+    ]);
 
     $response
         ->assertSessionHasNoErrors()
@@ -34,14 +39,13 @@ test('profile information can be updated', function () {
 });
 
 test('email verification status is unchanged when the email address is unchanged', function () {
-    $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->patch('/profile', [
-            'name' => 'Test User',
-            'email' => $user->email,
-        ]);
+    $user = User::factory()->create();
+    actingAs($user);
+    $response = patch('/profile', [
+        'name' => 'Test User',
+        'email' => $user->email,
+    ]);
 
     $response
         ->assertSessionHasNoErrors()
@@ -51,31 +55,28 @@ test('email verification status is unchanged when the email address is unchanged
 });
 
 test('user can delete their account', function () {
-    $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->delete('/profile', [
-            'password' => 'password',
-        ]);
+    $user = User::factory()->create();
+    actingAs($user);
+    $response = delete('/profile', [
+        'password' => 'password',
+    ]);
 
     $response
         ->assertSessionHasNoErrors()
         ->assertRedirect('/');
 
-    $this->assertGuest();
+    assertGuest();
     $this->assertNull($user->fresh());
 });
 
 test('correct password must be provided to delete account', function () {
-    $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->from('/profile')
-        ->delete('/profile', [
-            'password' => 'wrong-password',
-        ]);
+    $user = User::factory()->create();
+    actingAs($user);
+    $response = from('/profile')->delete('/profile', [
+        'password' => 'wrong-password',
+    ]);
 
     $response
         ->assertSessionHasErrorsIn('userDeletion', 'password')
