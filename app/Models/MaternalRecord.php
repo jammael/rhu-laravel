@@ -11,6 +11,7 @@ class MaternalRecord extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'patient_id',
         'full_name',
         'age',
         'address',
@@ -27,6 +28,14 @@ class MaternalRecord extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * Get the patient associated with this maternal record.
+     */
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
 
     /**
      * Register observers for this model

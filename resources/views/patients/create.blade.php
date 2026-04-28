@@ -229,6 +229,86 @@
                         </div>
                     @endif
 
+                    <!-- Maternal Health Fields (Only for type=maternal) -->
+                    @if($type === 'maternal')
+                        <div class="border-t border-gray-200 pt-6 mt-6">
+                            <h3 class="text-lg font-semibold text-slate-800 mb-4">Maternal Health Information</h3>
+
+                            <!-- Pregnancy Stage (Dropdown) -->
+                            <div>
+                                <label for="pregnancy_stage" class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Pregnancy Stage <span class="text-red-500">*</span>
+                                </label>
+                                <select
+                                    id="pregnancy_stage"
+                                    name="pregnancy_stage"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-slate-700
+                                           focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                                           transition-all duration-200 @error('pregnancy_stage') border-red-500 @enderror"
+                                    required>
+                                    <option value="">-- Select Pregnancy Stage --</option>
+                                    <option value="first_trimester" {{ old('pregnancy_stage') === 'first_trimester' ? 'selected' : '' }}>
+                                        1st Trimester (0-12 weeks)
+                                    </option>
+                                    <option value="second_trimester" {{ old('pregnancy_stage') === 'second_trimester' ? 'selected' : '' }}>
+                                        2nd Trimester (13-26 weeks)
+                                    </option>
+                                    <option value="third_trimester" {{ old('pregnancy_stage') === 'third_trimester' ? 'selected' : '' }}>
+                                        3rd Trimester (27+ weeks)
+                                    </option>
+                                </select>
+                                @error('pregnancy_stage')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Last Checkup Date -->
+                            <div class="mt-6">
+                                <label for="last_checkup_date" class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Last Checkup Date <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    id="last_checkup_date"
+                                    name="last_checkup_date"
+                                    value="{{ old('last_checkup_date') }}"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-slate-700
+                                           focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                                           transition-all duration-200 @error('last_checkup_date') border-red-500 @enderror"
+                                    required>
+                                @error('last_checkup_date')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Expected Delivery Date (EDD) -->
+                            <div class="mt-6">
+                                <label for="expected_delivery_date" class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Expected Delivery Date (EDD) <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    id="expected_delivery_date"
+                                    name="expected_delivery_date"
+                                    value="{{ old('expected_delivery_date') }}"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-slate-700
+                                           focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                                           transition-all duration-200 @error('expected_delivery_date') border-red-500 @enderror"
+                                    required>
+                                @error('expected_delivery_date')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Risk Level Display Note -->
+                            <div class="mt-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                                <p class="text-sm text-slate-600">
+                                    <span class="font-semibold">Note:</span> Maternal Risk Level will be automatically determined based on the clinical dates provided and the patient's age. Pregnant mothers aged 35 and above are automatically categorized as medium risk or higher.
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Action Buttons -->
                     <div class="flex gap-3 pt-6 border-t border-gray-100">
                         <button

@@ -25,4 +25,12 @@ class Patient extends Model
     {
         return $this->hasMany(ChildNutritionRecord::class);
     }
+
+    /**
+     * Get the maternal records associated with this patient.
+     */
+    public function maternalRecords()
+    {
+        return $this->hasMany(MaternalRecord::class);
+    }
 }

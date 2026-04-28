@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\ChildNutritionRecord;
+use App\Models\MaternalRecord;
 class PatientController extends Controller
 {
     /**
@@ -91,6 +92,16 @@ class PatientController extends Controller
             ]);
         }
 
+        // Additional validation for maternal records
+        $maternalValidated = null;
+        if ($type === 'maternal') {
+            $maternalValidated = $request->validate([
+                'pregnancy_stage'       => 'required|in:first_trimester,second_trimester,third_trimester',
+                'last_checkup_date'     => 'required|date',
+                'expected_delivery_date' => 'required|date|after:last_checkup_date',
+            ]);
+        }
+
         // 2. Create the patient in the database
         $patient = Patient::create($validated);
 
@@ -105,6 +116,24 @@ class PatientController extends Controller
                 'height_cm'          => $childValidated['height_cm'],
                 'last_weigh_in_date' => $childValidated['last_weigh_in_date'],
                 // nutritional_status will be calculated by the observer
+            ]);
+        }
+
+        // 3b. If maternal type, create linked MaternalRecord
+        if ($type === 'maternal' && $maternalValidated) {
+            // Calculate age from birthdate
+            $age = \Carbon\Carbon::parse($validated['birthdate'])->age;
+
+            MaternalRecord::create([
+                'patient_id'              => $patient->id,
+                'full_name'               => $validated['name'],
+                'age'                     => $age,
+                'address'                 => $validated['barangay'],
+                'contact_number'          => $validated['contact_number'],
+                'pregnancy_stage'         => $maternalValidated['pregnancy_stage'],
+                'last_checkup_date'       => $maternalValidated['last_checkup_date'],
+                'expected_delivery_date'  => $maternalValidated['expected_delivery_date'],
+                // risk_level will be calculated by the observer
             ]);
         }
 
