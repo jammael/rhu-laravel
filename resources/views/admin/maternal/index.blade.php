@@ -103,16 +103,11 @@
 
                 <!-- Risk Level -->
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Risk Level *</label>
-                    <select name="risk_level" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition" required>
-                        <option value="">Select risk level</option>
-                        <option value="low" {{ old('risk_level') === 'low' ? 'selected' : '' }}>🟢 Low Risk</option>
-                        <option value="medium" {{ old('risk_level') === 'medium' ? 'selected' : '' }}>🟡 Medium Risk</option>
-                        <option value="high" {{ old('risk_level') === 'high' ? 'selected' : '' }}>🔴 High Risk</option>
-                    </select>
-                    @error('risk_level')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                    @enderror
+                    <p class="block text-sm font-semibold text-slate-700 mb-2">🤖 Risk Level Status</p>
+                    <div class="w-full rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-2.5 text-emerald-800 text-sm">
+                        ✓ Risk status will be automatically calculated
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">Based on age, pregnancy stage, and checkup history</p>
                 </div>
 
                 <!-- Submit Button -->

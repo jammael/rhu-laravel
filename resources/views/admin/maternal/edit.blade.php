@@ -90,16 +90,20 @@
 
             <!-- Risk Level -->
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-2">Risk Level *</label>
-                <select name="risk_level" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition" required>
-                    <option value="">Select risk level</option>
-                    <option value="low" {{ old('risk_level', $maternalRecord->risk_level) === 'low' ? 'selected' : '' }}>🟢 Low Risk</option>
-                    <option value="medium" {{ old('risk_level', $maternalRecord->risk_level) === 'medium' ? 'selected' : '' }}>🟡 Medium Risk</option>
-                    <option value="high" {{ old('risk_level', $maternalRecord->risk_level) === 'high' ? 'selected' : '' }}>🔴 High Risk</option>
-                </select>
-                @error('risk_level')
-                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                @enderror
+                <p class="block text-sm font-semibold text-slate-700 mb-2">🤖 Risk Level Status</p>
+                <div class="w-full rounded-lg border border-blue-300 bg-blue-50 px-4 py-2.5 text-blue-800 text-sm flex items-center justify-between">
+                    <span>✓ Current Risk Level:</span>
+                    <span class="font-bold">
+                        @if($maternalRecord->risk_level === 'low')
+                            🟢 Low Risk
+                        @elseif($maternalRecord->risk_level === 'medium')
+                            🟡 Medium Risk
+                        @else
+                            🔴 High Risk
+                        @endif
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">This value is automatically calculated based on age, pregnancy stage, and checkup history. It will update when you save changes.</p>
             </div>
 
             <!-- Buttons -->

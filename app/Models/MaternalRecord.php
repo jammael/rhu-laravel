@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Observers\MaternalRecordObserver;
 
 class MaternalRecord extends Model
 {
@@ -26,4 +27,13 @@ class MaternalRecord extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * Register observers for this model
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::observe(MaternalRecordObserver::class);
+    }
 }

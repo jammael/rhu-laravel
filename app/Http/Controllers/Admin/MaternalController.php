@@ -80,7 +80,6 @@ class MaternalController extends Controller
             'pregnancy_stage' => 'required|in:first_trimester,second_trimester,third_trimester',
             'last_checkup_date' => 'required|date|before_or_equal:today',
             'expected_delivery_date' => 'required|date|after:last_checkup_date',
-            'risk_level' => 'required|in:low,medium,high',
         ]);
 
         // Create the maternal record
@@ -105,7 +104,6 @@ class MaternalController extends Controller
             'pregnancy_stage' => 'required|in:first_trimester,second_trimester,third_trimester',
             'last_checkup_date' => 'required|date|before_or_equal:today',
             'expected_delivery_date' => 'required|date|after:last_checkup_date',
-            'risk_level' => 'required|in:low,medium,high',
         ]);
 
         // Update the record
