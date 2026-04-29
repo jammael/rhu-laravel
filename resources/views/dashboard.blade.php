@@ -8,7 +8,7 @@
                 </h1>
                 <p class="text-slate-500 mt-2">Select a task to begin.</p>
             </div>
-
+    
             <!-- Quick Access Grid -->
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
 
