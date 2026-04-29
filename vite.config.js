@@ -6,6 +6,17 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
-        }),
+            detectTls: false,
+        })
     ],
+    server: {
+        host: 'localhost',
+        port: 5173,
+        https: false,
+        hmr: {
+            host: 'localhost',
+            port: 5173,
+            protocol: 'ws',
+        },
+    },
 });
