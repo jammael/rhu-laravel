@@ -88,12 +88,12 @@
 
     <!-- Search & Filter Section -->
     <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-        <form action="{{ route('patients.index') }}" method="GET" class="flex flex-col gap-4 md:flex-row md:items-center md:gap-3">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:gap-3">
             <!-- Search Input -->
             <div class="flex-1 relative">
                 <input
                     type="text"
-                    name="search"
+                    id="searchInput"
                     placeholder="Search by patient name..."
                     value="{{ request('search') }}"
                     class="w-full rounded-lg border border-gray-200 px-4 py-2.5 pl-10 text-sm text-slate-900 placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-200"
@@ -101,11 +101,17 @@
                 <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
+                <!-- Loading indicator -->
+                <div id="searchLoading" class="absolute right-3 top-1/2 -translate-y-1/2 hidden">
+                    <svg class="w-4 h-4 text-emerald-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                </div>
             </div>
 
             <!-- Category Dropdown -->
             <select
-                name="category"
+                id="categoryFilter"
                 class="rounded-lg border border-gray-200 px-4 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all duration-200 bg-white cursor-pointer"
             >
                 <option value="">All Categories</option>
@@ -113,17 +119,17 @@
                 <option value="child" {{ request('category') == 'child' ? 'selected' : '' }}>Malnourished Children</option>
             </select>
 
-            <!-- Filter Button -->
+            <!-- Clear Filters Button -->
             <button
-                type="submit"
-                class="rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors duration-200 flex items-center justify-center gap-2"
+                id="clearFilters"
+                class="rounded-lg bg-slate-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition-colors duration-200 flex items-center justify-center gap-2"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
-                Filter
+                Clear
             </button>
-        </form>
+        </div>
     </div>
 
     <!-- Data Table Section -->
@@ -252,4 +258,72 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const clearButton = document.getElementById('clearFilters');
+    const searchLoading = document.getElementById('searchLoading');
+    let searchTimeout;
+
+    // Function to perform the search
+    function performSearch() {
+        const searchTerm = searchInput.value;
+        const categoryTerm = categoryFilter.value;
+
+        // Show loading indicator
+        searchLoading.classList.remove('hidden');
+
+        // Build query string
+        const params = new URLSearchParams();
+        if (searchTerm) params.append('search', searchTerm);
+        if (categoryTerm) params.append('category', categoryTerm);
+
+        // Fetch filtered results
+        fetch(`{{ route('patients.index') }}?${params.toString()}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            // Extract table body from response
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(html, 'text/html');
+            const newTableBody = newDoc.querySelector('tbody');
+            const newFooter = newDoc.querySelector('.bg-slate-50.px-6.py-3');
+
+            // Replace table body and footer
+            document.querySelector('tbody').innerHTML = newTableBody.innerHTML;
+            document.querySelector('.bg-slate-50.px-6.py-3').innerHTML = newFooter.innerHTML;
+
+            // Hide loading indicator
+            searchLoading.classList.add('hidden');
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+            searchLoading.classList.add('hidden');
+        });
+    }
+
+    // Debounced search on input
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(performSearch, 300);
+    });
+
+    // Search on category change
+    categoryFilter.addEventListener('change', performSearch);
+
+    // Clear filters
+    clearButton.addEventListener('click', function() {
+        searchInput.value = '';
+        categoryFilter.value = '';
+        performSearch();
+    });
+});
+</script>
+@endpush
 
