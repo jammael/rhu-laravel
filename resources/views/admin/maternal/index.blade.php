@@ -176,7 +176,7 @@
             </div>
 
             @if ($records->count() > 0)
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto min-w-full w-full block whitespace-nowrap">
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-gray-200">
                             <tr>
@@ -225,7 +225,7 @@
         <!-- View Button (Modal Trigger) -->
         <button
             onclick="openViewModal({{ $record }})"
-            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition-all duration-200 hover:scale-110"
+            class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition-all duration-200 hover:scale-110"
             title="View Details"
         >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,7 +238,7 @@
             <!-- Edit Button -->
             <a
                 href="{{ route('maternal.edit', $record->id) }}"
-                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 hover:scale-110"
+                class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 hover:scale-110"
                 title="Edit Record"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -249,7 +249,7 @@
             <!-- Report Button (PDF) -->
             <a
                 href="{{ route('maternal.pdf', $record->id) }}"
-                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all duration-200 hover:scale-110"
+                class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all duration-200 hover:scale-110"
                 title="Download Report"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,7 +260,7 @@
             <!-- Archive Button -->
             <button
                 onclick="openArchiveModal({{ $record->id }}, '{{ $record->full_name }}')"
-                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 hover:scale-110"
+                class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 hover:scale-110"
                 title="Archive"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,7 +271,7 @@
             <!-- Restore Button -->
             <button
                 onclick="openRestoreModal({{ $record->id }}, '{{ $record->full_name }}')"
-                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 transition-all duration-200 hover:scale-110"
+                class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 transition-all duration-200 hover:scale-110"
                 title="Restore"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

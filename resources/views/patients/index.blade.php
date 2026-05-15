@@ -135,7 +135,7 @@
     <!-- Data Table Section -->
     <div class="rounded-lg border border-gray-200 bg-white shadow-sm overflow-hidden">
         <!-- Responsive Table Wrapper -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto min-w-full w-full block whitespace-nowrap">
             <table class="w-full text-sm">
                 <!-- Sticky Header -->
                 <thead class="sticky top-0 bg-slate-50 border-b border-gray-200">
@@ -188,7 +188,7 @@
                                     <!-- View Button -->
                                     <a
                                         href="{{ route('patients.show', $patient->id) }}"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition-all duration-200 hover:scale-110"
+                                        class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition-all duration-200 hover:scale-110"
                                         title="View"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,7 +200,7 @@
                                     <!-- Edit Button -->
                                     <a
                                         href="{{ route('patients.edit', $patient->id) }}"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 hover:scale-110"
+                                        class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all duration-200 hover:scale-110"
                                         title="Edit"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +219,7 @@
                                         @method('DELETE')
                                         <button
                                             type="submit"
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 hover:scale-110"
+                                            class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 hover:scale-110"
                                             title="Delete"
                                         >
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

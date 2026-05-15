@@ -52,7 +52,7 @@
         <!-- Logs Table -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6">
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto min-w-full w-full block whitespace-nowrap">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>

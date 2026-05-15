@@ -16,14 +16,47 @@
 </head>
 
 <body
-    x-data="{ 'darkMode': false, 'sidebarToggle': false, 'scrollTop': false }"
+    x-data="{ 'darkMode': false, 'sidebarToggle': false, 'scrollTop': false, 'mobileSidebarOpen': false }"
     class="bg-gray-50 text-slate-800"
   >
 
-    <!-- ===== Page Wrapper Start ===== -->
-    <div class="flex h-screen overflow-hidden">
+    <!-- ===== Mobile Fixed Top Header Start ===== -->
+    <div class="flex md:hidden items-center justify-between h-16 px-4 bg-white border-b border-slate-100 shadow-sm fixed top-0 w-full z-40">
+        <!-- Left: Logo & Brand -->
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
+            <img src="{{ asset('images/NutriCare_Logo.png') }}" alt="NutriCare Logo" class="h-8 w-auto mix-blend-multiply filter brightness-110 contrast-125">
+            <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest hidden xs:block">NutriCare</span>
+        </a>
 
-        <!-- Sidebar: We will create this file next -->
+        <!-- Right: Hamburger Menu -->
+        <button
+            @click="mobileSidebarOpen = !mobileSidebarOpen"
+            class="inline-flex items-center justify-center p-2 rounded-lg text-emerald-600 hover:bg-emerald-50 transition-colors"
+            title="Toggle menu"
+        >
+            <svg x-show="!mobileSidebarOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg x-show="mobileSidebarOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+    <!-- ===== Mobile Fixed Top Header End ===== -->
+
+    <!-- ===== Mobile Sidebar Overlay & Drawer Start ===== -->
+    <div
+        x-show="mobileSidebarOpen"
+        @click="mobileSidebarOpen = false"
+        x-transition
+        class="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden"
+    ></div>
+    <!-- ===== Mobile Sidebar Overlay & Drawer End ===== -->
+
+    <!-- ===== Page Wrapper Start ===== -->
+    <div class="flex h-screen overflow-hidden pt-16 md:pt-0">
+
+        <!-- Sidebar -->
         @include('admin.body.sidebar')
 
         <!-- ===== Content Area Start ===== -->

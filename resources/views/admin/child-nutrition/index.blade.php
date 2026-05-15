@@ -153,7 +153,7 @@
         <!-- Records Table -->
         <div class="rounded-xl bg-white shadow-sm border border-gray-100 overflow-hidden">
             @if ($records->count() > 0)
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto min-w-full w-full block whitespace-nowrap">
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-gray-200">
                             <tr>
@@ -176,7 +176,7 @@
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->last_weigh_in_date->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->weight_kg }} kg / {{ $record->height_cm }} cm</td>
                                     <td class="px-6 py-4 text-sm">
-                                        <a href="{{ route('child-nutrition.report', $record->id) }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-3 rounded transition text-xs">
+                                        <a href="{{ route('child-nutrition.report', $record->id) }}" class="inline-flex items-center justify-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition text-xs">
                                             📄 PDF Report
                                         </a>
                                     </td>

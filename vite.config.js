@@ -10,11 +10,11 @@ export default defineConfig({
         })
     ],
     server: {
-        host: 'localhost',
+        host: '0.0.0.0', // Exposes the Vite server to your local Wi-Fi network
         port: 5173,
         https: false,
         hmr: {
-            host: 'localhost',
+            host: '192.168.1.3', // Your laptop's active Wi-Fi IPv4 address
             port: 5173,
             protocol: 'ws',
         },

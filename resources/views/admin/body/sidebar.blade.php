@@ -1,7 +1,10 @@
-<!-- Main Sidebar Container: Changed bg-black to bg-white and added a subtle border -->
+<!-- Main Sidebar Container: Mobile drawer on small screens, fixed sidebar on desktop -->
 <aside
-  :class="sidebarToggle ? 'translate-x-0 lg:w-[290px]' : '-translate-x-full'"
-  class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 lg:static lg:translate-x-0 transition-all duration-300 shadow-sm"
+  :class="{
+    'translate-x-0': mobileSidebarOpen || window.innerWidth >= 768,
+    '-translate-x-full': !mobileSidebarOpen && window.innerWidth < 768
+  }"
+  class="sidebar fixed md:static left-0 top-16 md:top-0 z-40 md:z-auto flex h-[calc(100vh-4rem)] md:h-screen w-64 flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 md:translate-x-0 transition-all duration-300 shadow-sm md:shadow-none"
 >
   <!-- SIDEBAR HEADER -->
   <div class="flex items-center justify-center pt-10 pb-8 px-4">
@@ -28,24 +31,29 @@
           <li>
             {{-- Active Item: Green Background, White Text --}}
             <a href="{{ route('admin.dashboard') }}"
-               class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-bold text-white bg-emerald-600 shadow-md">
+               @click="mobileSidebarOpen = false"
+               class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-bold text-white bg-emerald-600 shadow-md hover:shadow-lg transition">
               <span>📊</span>
-              NutriCare Overview
+              <span class="truncate">NutriCare Overview</span>
             </a>
           </li>
 
           <li>
             {{-- Inactive Items: White Background, Dark Text, Green Hover --}}
-            <a href="{{ route('maternal.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition">
+            <a href="{{ route('maternal.index') }}"
+               @click="mobileSidebarOpen = false"
+               class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition">
               <span>🤰</span>
-              Maternal Care
+              <span class="truncate">Maternal Care</span>
             </a>
           </li>
 
           <li>
-            <a href="{{ route('child-nutrition.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition">
+            <a href="{{ route('child-nutrition.index') }}"
+               @click="mobileSidebarOpen = false"
+               class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition">
               <span>👶</span>
-              Child Nutrition
+              <span class="truncate">Child Nutrition</span>
             </a>
           </li>
         </ul>
@@ -58,13 +66,15 @@
           <li>
             <a href="#" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition">
               <span>📱</span>
-              SMS Reminders
+              <span class="truncate">SMS Reminders</span>
             </a>
           </li>
           <li>
-            <a href="{{ route('patients.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition">
+            <a href="{{ route('patients.index') }}"
+               @click="mobileSidebarOpen = false"
+               class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition">
               <span>📝</span>
-              Patient Enrollment
+              <span class="truncate">Patient Enrollment</span>
             </a>
           </li>
 
@@ -74,15 +84,19 @@
             <h3 class="mb-4 text-xs uppercase font-bold text-slate-400">SYSTEM ADMINISTRATION</h3>
             <ul class="flex flex-col gap-2">
               <li>
-                <a href="{{ route('admin.users.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-purple-50 hover:text-purple-600 transition">
+                <a href="{{ route('admin.users.index') }}"
+                   @click="mobileSidebarOpen = false"
+                   class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-purple-50 hover:text-purple-600 transition">
                   <span>👥</span>
-                  User Management
+                  <span class="truncate">User Management</span>
                 </a>
               </li>
               <li>
-                <a href="{{ route('admin.logs.index') }}" class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-purple-50 hover:text-purple-600 transition">
+                <a href="{{ route('admin.logs.index') }}"
+                   @click="mobileSidebarOpen = false"
+                   class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-slate-600 hover:bg-purple-50 hover:text-purple-600 transition">
                   <span>📋</span>
-                  Activity Logs
+                  <span class="truncate">Activity Logs</span>
                 </a>
               </li>
             </ul>
@@ -94,7 +108,7 @@
                 @csrf
                 <button type="submit" class="w-full flex items-center gap-2.5 rounded-md py-2 px-4 font-bold text-red-500 hover:bg-red-50 transition">
                     <span>🚪</span>
-                    <span>Logout</span>
+                    <span class="truncate">Logout</span>
                 </button>
             </form>
           </li>

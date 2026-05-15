@@ -37,7 +37,7 @@
         <!-- Users Table -->
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6">
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto min-w-full w-full block whitespace-nowrap">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -91,7 +91,7 @@
                                             <!-- Approve Button with Dropdown -->
                                             @if($user->status === 'pending')
                                                 <div class="relative group">
-                                                    <button type="button" class="approve-btn inline-flex items-center gap-1 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors" data-user-id="{{ $user->id }}">
+                                                    <button type="button" class="approve-btn inline-flex items-center gap-1 px-3 py-2 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors" data-user-id="{{ $user->id }}">
                                                         <span>✓</span>
                                                         <span>Approve</span>
                                                         <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
@@ -119,7 +119,7 @@
                                                 <!-- Deny Button -->
                                                 <form action="{{ route('admin.users.deny', $user->id) }}" method="POST" class="inline">
                                                     @csrf
-                                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" onclick="return confirm('Are you sure you want to deny this user?')">
+                                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-2 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" onclick="return confirm('Are you sure you want to deny this user?')">
                                                         <span>✕</span>
                                                         <span>Deny</span>
                                                     </button>
@@ -129,7 +129,7 @@
                                             <!-- Update Role Button -->
                                             @if($user->status === 'approved')
                                                 <div class="relative group">
-                                                    <button type="button" class="role-btn inline-flex items-center gap-1 px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors" data-user-id="{{ $user->id }}">
+                                                    <button type="button" class="role-btn inline-flex items-center gap-1 px-3 py-2 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors" data-user-id="{{ $user->id }}">
                                                         <span>🔄</span>
                                                         <span>Update Role</span>
                                                         <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
@@ -159,7 +159,7 @@
                                             @endif
 
                                             <!-- Edit Role Button (for all users) -->
-                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="inline-flex items-center gap-1 px-3 py-1.5 border border-blue-300 text-xs font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="inline-flex items-center gap-1 px-3 py-2 border border-blue-300 text-xs font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                                 </svg>
@@ -171,7 +171,7 @@
                                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors" onclick="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
+                                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-2 border border-transparent text-xs font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors" onclick="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
                                                         <span>🗑</span>
                                                         <span>Delete</span>
                                                     </button>
