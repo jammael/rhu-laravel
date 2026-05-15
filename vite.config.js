@@ -14,7 +14,7 @@ export default defineConfig({
         port: 5173,
         https: false,
         hmr: {
-            host: '192.168.1.3', // Your laptop's active Wi-Fi IPv4 address
+            host: '10.196.84.34', // Your laptop's active Wi-Fi IPv4 address
             port: 5173,
             protocol: 'ws',
         },
