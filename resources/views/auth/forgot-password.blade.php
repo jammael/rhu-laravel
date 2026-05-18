@@ -1,7 +1,7 @@
 <title>{{ config('app.name', 'NutriCare') }} | Forgot Password</title>
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        {{ __('Forgot your password? Enter your NutriCare account email and we will send a 6-digit OTP for password recovery.') }}
     </div>
 
     <!-- Session Status -->
@@ -19,7 +19,7 @@
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                {{ __('Email Password Reset Link') }}
+                {{ __('Send OTP') }}
             </x-primary-button>
         </div>
     </form>

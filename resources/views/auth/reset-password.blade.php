@@ -1,16 +1,26 @@
 <title>{{ config('app.name', 'NutriCare') }} | Reset Password</title>
 <x-guest-layout>
+    <div class="mb-4 text-sm text-gray-600">
+        {{ __('Enter the OTP sent to your email. Then choose a new password for your NutriCare account.') }}
+    </div>
+
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
-
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="$email" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- OTP -->
+        <div class="mt-4">
+            <x-input-label for="otp" :value="__('OTP')" />
+            <x-text-input id="otp" class="block mt-1 w-full tracking-widest" type="text" name="otp" :value="old('otp')" required inputmode="numeric" maxlength="6" autocomplete="one-time-code" />
+            <x-input-error :messages="$errors->get('otp')" class="mt-2" />
         </div>
 
         <!-- Password -->
