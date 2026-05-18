@@ -32,7 +32,7 @@ class AdminController extends Controller
         $totalPatients = Patient::count();
 
         // Get latest 5 maternal records for urgent health alerts
-        $urgentAlerts = MaternalRecord::orderBy('created_at', 'desc')->take(5)->get();
+        $urgentAlerts = MaternalRecord::with('patient')->orderBy('created_at', 'desc')->take(5)->get();
 
         // Nutritional Growth Trends - Last 3 Months
         $chartData = $this->getNutritionalGrowthTrends();
@@ -63,12 +63,19 @@ class AdminController extends Controller
         // Get data for the last 3 months
         $threeMonthsAgo = Carbon::now()->subMonths(3)->startOfMonth();
         $today = Carbon::now()->endOfDay();
+        $driver = DB::connection()->getDriverName();
+        $monthExpression = $driver === 'pgsql'
+            ? "TO_CHAR(created_at, 'YYYY-MM')"
+            : 'DATE_FORMAT(created_at, "%Y-%m")';
+        $monthLabelExpression = $driver === 'pgsql'
+            ? "TO_CHAR(created_at, 'Mon YYYY')"
+            : 'DATE_FORMAT(created_at, "%b %Y")';
 
         // Query to get monthly nutrition data
         $trendData = ChildNutritionRecord::whereBetween('created_at', [$threeMonthsAgo, $today])
             ->select(
-                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-                DB::raw('DATE_FORMAT(created_at, "%b %Y") as month_label'),
+                DB::raw("{$monthExpression} as month"),
+                DB::raw("{$monthLabelExpression} as month_label"),
                 DB::raw("SUM(CASE WHEN nutritional_status = 'normal' THEN 1 ELSE 0 END) as normal_count"),
                 DB::raw("SUM(CASE WHEN nutritional_status IN ('underweight', 'severely_underweight') THEN 1 ELSE 0 END) as underweight_count")
             )

@@ -168,7 +168,7 @@
                         <tbody class="divide-y divide-gray-200">
                             @foreach ($records as $record)
                                 <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $record->full_name }}</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $record->display_name }}</td>
                                     <td class="px-6 py-4 text-sm text-slate-600">{{ $record->age_months }} months</td>
                                     <td class="px-6 py-4 text-sm">
                                         <x-nutrition-status-badge :status="$record->nutritional_status" />

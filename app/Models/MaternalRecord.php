@@ -29,12 +29,33 @@ class MaternalRecord extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = [
+        'display_name',
+        'display_address',
+        'display_contact_number',
+    ];
+
     /**
      * Get the patient associated with this maternal record.
      */
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->patient?->name ?? $this->full_name;
+    }
+
+    public function getDisplayAddressAttribute(): string
+    {
+        return $this->patient?->barangay ?? $this->address;
+    }
+
+    public function getDisplayContactNumberAttribute(): string
+    {
+        return $this->patient?->contact_number ?? $this->contact_number;
     }
 
     /**

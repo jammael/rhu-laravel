@@ -18,6 +18,11 @@ use App\Observers\ChildNutritionRecordObserver;
  */
 class ChildNutritionRecord extends Model
 {
+    protected $appends = [
+        'display_name',
+        'display_barangay',
+    ];
+
     protected $fillable = [
         'patient_id',
         'full_name',
@@ -48,5 +53,15 @@ class ChildNutritionRecord extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->patient?->name ?? $this->full_name;
+    }
+
+    public function getDisplayBarangayAttribute(): string
+    {
+        return $this->patient?->barangay ?? $this->barangay;
     }
 }

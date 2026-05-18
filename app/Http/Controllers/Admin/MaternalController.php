@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MaternalRecord;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class MaternalController extends Controller
 {
@@ -14,11 +16,15 @@ class MaternalController extends Controller
      */
     public function index(Request $request)
     {
-        $query = MaternalRecord::withTrashed();
+        $query = MaternalRecord::with('patient')->withTrashed();
 
         // Search by full name
         if ($request->filled('search')) {
-            $query->where('full_name', 'like', '%' . $request->search . '%');
+            $search = $request->search;
+            $query->where(function ($query) use ($search) {
+                $query->where('full_name', 'like', '%' . $search . '%')
+                    ->orWhereHas('patient', fn ($patientQuery) => $patientQuery->where('name', 'like', '%' . $search . '%'));
+            });
         }
 
         // Filter by risk level (from search form)
@@ -55,6 +61,8 @@ class MaternalController extends Controller
      */
     public function show(MaternalRecord $maternalRecord)
     {
+        $maternalRecord->load('patient');
+
         return view('admin.maternal.show', compact('maternalRecord'));
     }
 
@@ -63,6 +71,8 @@ class MaternalController extends Controller
      */
     public function edit(MaternalRecord $maternalRecord)
     {
+        $maternalRecord->load('patient');
+
         return view('admin.maternal.edit', compact('maternalRecord'));
     }
 
@@ -82,8 +92,26 @@ class MaternalController extends Controller
             'expected_delivery_date' => 'required|date|after:last_checkup_date',
         ]);
 
-        // Create the maternal record
-        MaternalRecord::create($validated);
+        DB::transaction(function () use ($validated) {
+            $patient = Patient::findOrCreateForModule([
+                'name' => $validated['full_name'],
+                'birthdate' => now()->subYears($validated['age'])->toDateString(),
+                'category' => 'pregnant',
+                'barangay' => $validated['address'],
+                'contact_number' => $validated['contact_number'],
+            ]);
+
+            MaternalRecord::create([
+                'patient_id' => $patient->id,
+                'full_name' => $patient->name,
+                'age' => $validated['age'],
+                'address' => $patient->barangay,
+                'contact_number' => $patient->contact_number,
+                'pregnancy_stage' => $validated['pregnancy_stage'],
+                'last_checkup_date' => $validated['last_checkup_date'],
+                'expected_delivery_date' => $validated['expected_delivery_date'],
+            ]);
+        });
 
         // Redirect back with success message
         return redirect()->route('maternal.index')
@@ -106,8 +134,34 @@ class MaternalController extends Controller
             'expected_delivery_date' => 'required|date|after:last_checkup_date',
         ]);
 
-        // Update the record
-        $maternalRecord->update($validated);
+        DB::transaction(function () use ($maternalRecord, $validated) {
+            $patient = $maternalRecord->patient ?: Patient::findOrCreateForModule([
+                'name' => $validated['full_name'],
+                'birthdate' => now()->subYears($validated['age'])->toDateString(),
+                'category' => 'pregnant',
+                'barangay' => $validated['address'],
+                'contact_number' => $validated['contact_number'],
+            ]);
+
+            $patient->update([
+                'name' => $validated['full_name'],
+                'birthdate' => $patient->birthdate ?? now()->subYears($validated['age'])->toDateString(),
+                'category' => 'pregnant',
+                'barangay' => $validated['address'],
+                'contact_number' => $validated['contact_number'],
+            ]);
+
+            $maternalRecord->update([
+                'patient_id' => $patient->id,
+                'full_name' => $patient->name,
+                'age' => $validated['age'],
+                'address' => $patient->barangay,
+                'contact_number' => $patient->contact_number,
+                'pregnancy_stage' => $validated['pregnancy_stage'],
+                'last_checkup_date' => $validated['last_checkup_date'],
+                'expected_delivery_date' => $validated['expected_delivery_date'],
+            ]);
+        });
 
         return redirect()->route('maternal.index')
                         ->with('success', 'Maternal record updated successfully!');
@@ -141,6 +195,8 @@ class MaternalController extends Controller
      */
     public function generatePDF(MaternalRecord $maternalRecord)
     {
+        $maternalRecord->load('patient');
+
         $data = [
             'record' => $maternalRecord,
             'rhuName' => 'Rural Health Unit - Maternal Care',
@@ -152,4 +208,3 @@ class MaternalController extends Controller
         return $pdf->download('maternal_record_' . $maternalRecord->id . '_' . now()->format('Y-m-d') . '.pdf');
     }
 }
-

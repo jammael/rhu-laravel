@@ -19,7 +19,6 @@ vendor
 .nvmrc
 npm-debug.log
 yarn-error.log
-composer.lock
 
 # IDE and editor files
 .vscode
@@ -39,7 +38,6 @@ COMPLETION_CHECKLIST.md
 # Testing
 tests
 phpunit.xml
-package.json
 webpack.mix.js
 tsconfig.json
 

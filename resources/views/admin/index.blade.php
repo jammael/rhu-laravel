@@ -176,7 +176,7 @@
 {{ $alert->risk_level == 'high' ? 'bg-red-50 border-red-200' : 'bg-yellow-50 border-yellow-200' }}">
 
                     <div class="flex-1 min-w-0">
-                        <p class="text-xs font-bold text-slate-800">{{ $alert->full_name }}</p>
+                        <p class="text-xs font-bold text-slate-800">{{ $alert->display_name }}</p>
                         <p class="text-xs text-slate-600 mt-0.5">Age: {{ $alert->age }} • {{ ucfirst(str_replace('_', ' ', $alert->pregnancy_stage)) }}</p>
                         <p class="text-xs text-slate-500 mt-0.5">Delivery: {{ $alert->expected_delivery_date->format('M d, Y') }}</p>
                     </div>

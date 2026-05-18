@@ -4,7 +4,7 @@
 <!-- Page Header -->
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-slate-800">Maternal Record Details</h1>
-    <p class="text-slate-600 mt-2">Complete health profile for {{ $maternalRecord->full_name }}</p>
+    <p class="text-slate-600 mt-2">Complete health profile for {{ $maternalRecord->display_name }}</p>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -16,7 +16,7 @@
             <div class="grid grid-cols-2 gap-6">
                 <div>
                     <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Full Name</label>
-                    <p class="text-lg font-semibold text-slate-800 mt-1">{{ $maternalRecord->full_name }}</p>
+                    <p class="text-lg font-semibold text-slate-800 mt-1">{{ $maternalRecord->display_name }}</p>
                 </div>
 
                 <div>
@@ -26,12 +26,12 @@
 
                 <div class="col-span-2">
                     <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Address</label>
-                    <p class="text-sm text-slate-700 mt-1">{{ $maternalRecord->address }}</p>
+                    <p class="text-sm text-slate-700 mt-1">{{ $maternalRecord->display_address }}</p>
                 </div>
 
                 <div>
                     <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Contact Number</label>
-                    <p class="text-sm text-slate-700 mt-1">{{ $maternalRecord->contact_number }}</p>
+                    <p class="text-sm text-slate-700 mt-1">{{ $maternalRecord->display_contact_number }}</p>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
                 </a>
 
                 <!-- Archive Button -->
-                <button onclick="openArchiveModal({{ $maternalRecord->id }}, '{{ $maternalRecord->full_name }}')" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-4 rounded-lg transition">
+                <button onclick="openArchiveModal({{ $maternalRecord->id }}, @js($maternalRecord->display_name))" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-4 rounded-lg transition">
                     🗑️ Archive Record
                 </button>
 

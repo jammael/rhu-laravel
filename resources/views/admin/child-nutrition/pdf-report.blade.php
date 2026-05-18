@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Child Health Report - {{ $record->full_name }}</title>
+    <title>Child Health Report - {{ $record->display_name }}</title>
     <style>
         * {
             margin: 0;
@@ -250,7 +250,7 @@
         <div class="header">
             <h1>{{ $rhuName }}</h1>
             <p>Child Nutrition & Health Assessment Report</p>
-            <div class="report-title">Health Record for {{ $record->full_name }}</div>
+            <div class="report-title">Health Record for {{ $record->display_name }}</div>
             <p style="font-size: 11px; margin-top: 10px;">Report Generated: {{ $reportDate }}</p>
         </div>
 
@@ -261,7 +261,7 @@
                 <div class="info-row">
                     <div class="info-col">
                         <div class="info-label">Child's Full Name</div>
-                        <div class="info-value">{{ $record->full_name }}</div>
+                        <div class="info-value">{{ $record->display_name }}</div>
                     </div>
                     <div class="info-col">
                         <div class="info-label">Age</div>
@@ -271,7 +271,7 @@
                 <div class="info-row">
                     <div class="info-col">
                         <div class="info-label">Barangay</div>
-                        <div class="info-value">{{ $record->barangay }}</div>
+                        <div class="info-value">{{ $record->display_barangay }}</div>
                     </div>
                     <div class="info-col">
                         <div class="info-label">Last Weigh-in Date</div>

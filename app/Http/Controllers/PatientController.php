@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\ChildNutritionRecord;
 use App\Models\MaternalRecord;
+use Illuminate\Support\Facades\DB;
+
 class PatientController extends Controller
 {
     /**
@@ -21,7 +23,7 @@ class PatientController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Patient::query();
+        $query = Patient::with(['maternalRecords', 'childNutritionRecords']);
 
         // Search filter
         if ($request->filled('search')) {
@@ -43,7 +45,7 @@ class PatientController extends Controller
             };
         }
 
-        $patients = $query->get();
+        $patients = $query->orderBy('name')->get();
 
         return view('patients.index', compact('patients'));
     }
@@ -102,40 +104,36 @@ class PatientController extends Controller
             ]);
         }
 
-        // 2. Create the patient in the database
-        $patient = Patient::create($validated);
+        DB::transaction(function () use ($type, $validated, $childValidated, $maternalValidated) {
+            $patient = Patient::findOrCreateForModule($validated);
 
-        // 3. If child nutrition type, create linked ChildNutritionRecord
-        if ($type === 'child' && $childValidated) {
-            ChildNutritionRecord::create([
-                'patient_id'         => $patient->id,
-                'full_name'          => $validated['name'],
-                'age_months'         => $childValidated['age_months'],
-                'barangay'           => $validated['barangay'],
-                'weight_kg'          => $childValidated['weight_kg'],
-                'height_cm'          => $childValidated['height_cm'],
-                'last_weigh_in_date' => $childValidated['last_weigh_in_date'],
-                // nutritional_status will be calculated by the observer
-            ]);
-        }
+            if ($type === 'child' && $childValidated) {
+                ChildNutritionRecord::create([
+                    'patient_id' => $patient->id,
+                    'full_name' => $patient->name,
+                    'age_months' => $childValidated['age_months'],
+                    'barangay' => $patient->barangay,
+                    'weight_kg' => $childValidated['weight_kg'],
+                    'height_cm' => $childValidated['height_cm'],
+                    'last_weigh_in_date' => $childValidated['last_weigh_in_date'],
+                ]);
+            }
 
-        // 3b. If maternal type, create linked MaternalRecord
-        if ($type === 'maternal' && $maternalValidated) {
-            // Calculate age from birthdate
-            $age = \Carbon\Carbon::parse($validated['birthdate'])->age;
+            if ($type === 'maternal' && $maternalValidated) {
+                $age = \Carbon\Carbon::parse($patient->birthdate)->age;
 
-            MaternalRecord::create([
-                'patient_id'              => $patient->id,
-                'full_name'               => $validated['name'],
-                'age'                     => $age,
-                'address'                 => $validated['barangay'],
-                'contact_number'          => $validated['contact_number'],
-                'pregnancy_stage'         => $maternalValidated['pregnancy_stage'],
-                'last_checkup_date'       => $maternalValidated['last_checkup_date'],
-                'expected_delivery_date'  => $maternalValidated['expected_delivery_date'],
-                // risk_level will be calculated by the observer
-            ]);
-        }
+                MaternalRecord::create([
+                    'patient_id' => $patient->id,
+                    'full_name' => $patient->name,
+                    'age' => $age,
+                    'address' => $patient->barangay,
+                    'contact_number' => $patient->contact_number,
+                    'pregnancy_stage' => $maternalValidated['pregnancy_stage'],
+                    'last_checkup_date' => $maternalValidated['last_checkup_date'],
+                    'expected_delivery_date' => $maternalValidated['expected_delivery_date'],
+                ]);
+            }
+        });
 
         // 4. Redirect back with a success message
         return redirect()->route('patients.index')->with('success', 'New patient added successfully!');
@@ -147,7 +145,7 @@ class PatientController extends Controller
      */
     public function show(string $id)
     {
-        $patient = Patient::findOrFail($id);
+        $patient = Patient::with(['maternalRecords', 'childNutritionRecords'])->findOrFail($id);
         return view('patients.show', compact('patient'));
     }
 
@@ -156,7 +154,7 @@ class PatientController extends Controller
      */
     public function edit(string $id)
     {
-        $patient = Patient::findOrFail($id);
+        $patient = Patient::with(['maternalRecords', 'childNutritionRecords'])->findOrFail($id);
         return view('patients.edit', compact('patient'));
     }
 
@@ -175,7 +173,23 @@ class PatientController extends Controller
             'contact_number' => 'required|string',
         ]);
 
-        $patient->update($validated);
+        DB::transaction(function () use ($patient, $validated) {
+            $patient->update($validated);
+
+            $age = \Carbon\Carbon::parse($patient->birthdate)->age;
+
+            $patient->maternalRecords()->update([
+                'full_name' => $patient->name,
+                'age' => $age,
+                'address' => $patient->barangay,
+                'contact_number' => $patient->contact_number,
+            ]);
+
+            $patient->childNutritionRecords()->update([
+                'full_name' => $patient->name,
+                'barangay' => $patient->barangay,
+            ]);
+        });
 
         return redirect()->route('patients.show', $patient->id)->with('success', 'Patient updated successfully!');
     }

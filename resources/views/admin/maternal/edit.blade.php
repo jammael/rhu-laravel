@@ -4,7 +4,7 @@
 <!-- Page Header -->
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-slate-800">Edit Maternal Record</h1>
-    <p class="text-slate-600 mt-2">Update health details for {{ $maternalRecord->full_name }}</p>
+    <p class="text-slate-600 mt-2">Update health details for {{ $maternalRecord->display_name }}</p>
 </div>
 
 <div class="max-w-2xl mx-auto">
@@ -18,7 +18,7 @@
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Full Name *</label>
                 <input type="text" name="full_name" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
-                       value="{{ old('full_name', $maternalRecord->full_name) }}" required>
+                       value="{{ old('full_name', $maternalRecord->display_name) }}" required>
                 @error('full_name')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -38,7 +38,7 @@
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Address *</label>
                 <textarea name="address" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
-                          rows="3" required>{{ old('address', $maternalRecord->address) }}</textarea>
+                          rows="3" required>{{ old('address', $maternalRecord->display_address) }}</textarea>
                 @error('address')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
@@ -48,7 +48,7 @@
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Contact Number *</label>
                 <input type="text" name="contact_number" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition"
-                       value="{{ old('contact_number', $maternalRecord->contact_number) }}" required>
+                       value="{{ old('contact_number', $maternalRecord->display_contact_number) }}" required>
                 @error('contact_number')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                 @enderror
