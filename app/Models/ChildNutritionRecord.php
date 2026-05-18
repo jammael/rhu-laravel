@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Observers\ChildNutritionRecordObserver;
 
 /**
@@ -18,6 +19,8 @@ use App\Observers\ChildNutritionRecordObserver;
  */
 class ChildNutritionRecord extends Model
 {
+    use SoftDeletes;
+
     protected $appends = [
         'display_name',
         'display_barangay',

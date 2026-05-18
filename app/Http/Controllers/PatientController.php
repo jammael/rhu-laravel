@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\ChildNutritionRecord;
@@ -23,7 +24,7 @@ class PatientController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Patient::with(['maternalRecords', 'childNutritionRecords']);
+        $query = Patient::with(['maternalRecords', 'childNutritionRecords'])->withTrashed();
 
         // Search filter
         if ($request->filled('search')) {
@@ -43,6 +44,10 @@ class PatientController extends Controller
                 'all' => $query, // All patients
                 default => $query,
             };
+        }
+
+        if (!$request->filled('show_archived')) {
+            $query->whereNull('deleted_at');
         }
 
         $patients = $query->orderBy('name')->get();
@@ -200,8 +205,40 @@ class PatientController extends Controller
     public function destroy(string $id)
     {
         $patient = Patient::findOrFail($id);
-        $patient->delete();
 
-        return redirect()->route('patients.index')->with('success', 'Patient deleted successfully!');
+        DB::transaction(function () use ($patient) {
+            $patient->maternalRecords()->delete();
+            $patient->childNutritionRecords()->delete();
+            $patient->delete();
+        });
+
+        return redirect()->route('patients.index')->with('success', 'Patient archived successfully!');
+    }
+
+    public function restore(string $id)
+    {
+        $patient = Patient::onlyTrashed()->findOrFail($id);
+
+        DB::transaction(function () use ($patient) {
+            $patient->restore();
+            $patient->maternalRecords()->onlyTrashed()->restore();
+            $patient->childNutritionRecords()->onlyTrashed()->restore();
+        });
+
+        return redirect()->route('patients.index', ['show_archived' => 1])
+            ->with('success', 'Patient restored successfully!');
+    }
+
+    public function generatePDF(Patient $patient)
+    {
+        $patient->load(['maternalRecords', 'childNutritionRecords']);
+
+        $pdf = Pdf::loadView('patients.pdf-report', [
+            'patient' => $patient,
+            'rhuName' => 'Rural Health Unit of Sierra Bullones',
+            'reportDate' => now()->format('F d, Y'),
+        ]);
+
+        return $pdf->download('Patient_Report_' . str($patient->name)->replace(' ', '_') . '.pdf');
     }
 }

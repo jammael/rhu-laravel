@@ -65,10 +65,17 @@ Route::get('/maternal-care/{maternalRecord}/pdf', [MaternalController::class, 'g
 // Child Nutrition Routes
 Route::get('/child-nutrition', [ChildNutritionController::class, 'index'])->name('child-nutrition.index');
 Route::post('/child-nutrition/store', [ChildNutritionController::class, 'store'])->name('child-nutrition.store');
+Route::get('/child-nutrition/{childNutritionRecord}', [ChildNutritionController::class, 'show'])->name('child-nutrition.show');
+Route::get('/child-nutrition/{childNutritionRecord}/edit', [ChildNutritionController::class, 'edit'])->name('child-nutrition.edit');
+Route::patch('/child-nutrition/{childNutritionRecord}', [ChildNutritionController::class, 'update'])->name('child-nutrition.update');
+Route::delete('/child-nutrition/{childNutritionRecord}', [ChildNutritionController::class, 'destroy'])->name('child-nutrition.destroy');
+Route::patch('/child-nutrition/{id}/restore', [ChildNutritionController::class, 'restore'])->name('child-nutrition.restore');
 Route::get('/child-nutrition/{id}/report', [ChildNutritionController::class, 'generateChildHealthReport'])->name('child-nutrition.report');
 
 // Patient Routes
 Route::get('/patients/select', [PatientController::class, 'select'])->name('patients.select');
+Route::get('/patients/{patient}/pdf', [PatientController::class, 'generatePDF'])->name('patients.pdf');
+Route::patch('/patients/{id}/restore', [PatientController::class, 'restore'])->name('patients.restore');
 Route::resource('patients', PatientController::class);
 
 });
