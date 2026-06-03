@@ -8,7 +8,9 @@
 >
   <!-- SIDEBAR HEADER -->
   <div class="flex items-center justify-center pt-10 pb-8 px-4">
-    <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center">
+    <a href="{{ Auth::user()?->role === 'admin' ? route('admin.dashboard') : '#' }}"
+       @if(Auth::user()?->role !== 'admin') @click.prevent="$dispatch('unauthorized-access')" @endif
+       class="flex flex-col items-center">
         {{-- Enhanced filters: Brightness 110 washes out the gray, contrast 125 sharpens the green --}}
         <img
             src="{{ asset('images/NutriCare_Logo.png') }}"
@@ -30,8 +32,8 @@
         <ul class="flex flex-col gap-2 mb-6">
           <li>
             {{-- Active Item: Green Background, White Text --}}
-            <a href="{{ route('admin.dashboard') }}"
-               @click="mobileSidebarOpen = false"
+            <a href="{{ Auth::user()?->role === 'admin' ? route('admin.dashboard') : '#' }}"
+               @click="{{ Auth::user()?->role === 'admin' ? 'mobileSidebarOpen = false' : '$event.preventDefault(); mobileSidebarOpen = false; $dispatch(\'unauthorized-access\')' }}"
                class="group flex items-center gap-2.5 rounded-md py-2 px-4 font-bold text-white bg-emerald-600 shadow-md hover:shadow-lg transition">
               <span>📊</span>
               <span class="truncate">NutriCare Overview</span>
