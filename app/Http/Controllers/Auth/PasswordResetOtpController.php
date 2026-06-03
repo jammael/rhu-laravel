@@ -71,6 +71,11 @@ class PasswordResetOtpController extends Controller
         ]);
     }
 
+    public function success(): View
+    {
+        return view('auth.reset-password-success');
+    }
+
     public function resetPassword(Request $request): RedirectResponse
     {
         $request->validate([
@@ -131,6 +136,6 @@ class PasswordResetOtpController extends Controller
 
         event(new PasswordReset($user));
 
-        return redirect()->route('login')->with('status', 'Your password has been reset. You can now log in.');
+        return redirect()->route('password.success');
     }
 }

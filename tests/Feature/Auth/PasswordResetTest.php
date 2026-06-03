@@ -64,7 +64,7 @@ test('password can be reset with valid OTP', function () {
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('login'));
+        ->assertRedirect(route('password.success'));
 });
 
 test('password cannot be reset with invalid OTP', function () {
